@@ -1,0 +1,13 @@
+name: Custom
+description: This AI is for trying out custom settings!
+timelimit: 10
+iterativeDeepening: true
+depth: 15
+alphaBetaPrunning: true
+killerHeuristic: false
+transpositionTable: false
+moveOrdering: false
+iterativeDeepeningStartDepth: 2
+checkForCheckmate: true
+checkForStalemate: true
+addRandomness: true

@@ -1,0 +1,34 @@
+W: 16
+	P: {2, A, true, false}
+	P: {2, B, true, false}
+	P: {2, C, true, false}
+	P: {2, D, true, false}
+	P: {2, E, true, false}
+	P: {2, F, true, false}
+	P: {2, G, true, false}
+	P: {2, H, true, false}
+	R: {1, A, true, false}
+	Kn: {1, B, true}
+	B: {1, C, true}
+	Q: {1, D, true}
+	K: {1, E, true, false}
+	B: {1, F, true}
+	Kn: {1, G, true}
+	R: {1, H, true, false}
+B: 16
+	P: {7, A, false, false}
+	P: {7, B, false, false}
+	P: {7, C, false, false}
+	P: {7, D, false, false}
+	P: {7, E, false, false}
+	P: {7, F, false, false}
+	P: {7, G, false, false}
+	P: {7, H, false, false}
+	R: {8, A, false, false}
+	Kn: {8, B, false}
+	B: {8, C, false}
+	Q: {8, D, false}
+	K: {8, E, false, false}
+	B: {8, F, false}
+	Kn: {8, G, false}
+	R: {8, H, false, false}

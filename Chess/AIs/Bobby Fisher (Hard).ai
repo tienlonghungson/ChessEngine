@@ -1,0 +1,13 @@
+name: Bobby Fisher
+description: Bobby Fisher is a hard, experienced opponent!
+timelimit: 30
+iterativeDeepening: true
+depth: 15
+alphaBetaPrunning: true
+killerHeuristic: false
+transpositionTable: false
+moveOrdering: false
+iterativeDeepeningStartDepth: 2
+checkForCheckmate: true
+checkForStalemate: true
+addRandomness: true
