@@ -61,13 +61,13 @@ public class AISettings {
                 case "depth":
                     settings.depth = Integer.parseInt(value);
                     break;
-                case "alphaBetaPrunning":
+                case "alphaBetaPruning":
                     settings.alphaBetaPruning = Boolean.parseBoolean(value);
                     break;
                 case "iterativeDeepening":
                     settings.iterativeDeepening = Boolean.parseBoolean(value);
                     break;
-                case "timelimit":
+                case "timeLimit":
                     if (value.equalsIgnoreCase("unlimited")) {
                         settings.useTimeLimit = false;
                     } else {

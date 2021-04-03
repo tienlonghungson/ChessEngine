@@ -1,9 +1,9 @@
 name: Gavin
 description: Gavin is fun simple AI perfect for young or inexperienced chess players who want to learn more about the game!
-timelimit: 1
+timeLimit: 1
 iterativeDeepening: true
 depth: 5
-alphaBetaPrunning: true
+alphaBetaPruning: true
 killerHeuristic: false
 transpositionTable: false
 moveOrdering: false
