@@ -9,8 +9,7 @@ import src.position.PositionMap;
 
 import java.util.LinkedList;
 
-public class HumanPlayer extends Player
-{
+public class HumanPlayer extends Player {
 
     private Piece highlightedPiece;
     private PositionMap<Move> positionMap;
@@ -20,64 +19,49 @@ public class HumanPlayer extends Player
         super(isWhite);
     }
 
-    public void calculateNextMove()
-    {
+    public void calculateNextMove() {}
 
-    }
-
-    public void forwardBoardInput(Position position)
-    {
+    public void forwardBoardInput(Position position) {
         board.clearHighlights();
-        if(highlightedPiece == null)
-        {
+        if(highlightedPiece == null) {
             Piece piece = board.getPiece(position);
-            if(piece != null && piece.isWhite() == isWhite)
-            {
+            if(piece != null && piece.isWhite() == isWhite) {
                 board.highlight(position);
                 highlightedPiece = piece;
                 LinkedList<Move> moves = piece.getValidMoves();
                 positionMap = Piece.getMoveMap(moves);
-                if(Settings.showMoves)
-                    for (Move move: moves)
+                if(Settings.showMoves) {
+                    for (Move move : moves) {
                         board.highlight(move.getEndPosition());
+                    }
+                }
             }
-        }
-        else
-        {
-            if (positionMap != null)
-            {
+        } else {
+            if (positionMap != null) {
                 LinkedList<Move> moves = new LinkedList<>();
                 Move move = positionMap.remove(position);
-                while (move != null)
-                {
+                while (move != null) {
                     moves.add(move);
                     move = positionMap.remove(position);
                 }
                 highlightedPiece = null;
                 positionMap = null;
-                if (moves.size() == 1)
+                if (moves.size() == 1) {
                     returnMove(moves.get(0));
-                else if(moves.size() > 1)
-                {
+                } else if (moves.size() > 1) {
                     returnMove(MoveConformationWindow.display("Confirm Move", "Which move would you like to take?", moves));
-                }
-                else
+                } else {
                     forwardBoardInput(position);
-            }
-            else
-            {
+                }
+            } else {
                 board.highlight(position);
             }
         }
     }
 
-    public void stop()
-    {
+    public void stop() {}
 
-    }
-
-    public String toString()
-    {
+    public String toString() {
         return "Human";
     }
 }

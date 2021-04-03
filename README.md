@@ -4,6 +4,10 @@ A simple chess engine and UI using JavaFX and the Minimax Algorithm with Alpha-B
 This is just the demo engine.
 
 TO-DO :
-- Separate engine and GUI
+- Redesign - Separate engine and GUI
 - Speed-up Engine
 - Maybe add a Reinforcement Learning model  
+
+Requirement :
+- JDK, JAVA SE 11++
+- JAVA FX

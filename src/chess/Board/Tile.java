@@ -5,8 +5,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
-public class Tile extends StackPane
-{
+public class Tile extends StackPane {
     public static final int HIGHLIGHT_WIDTH = 8;
     public static final Color HIGHLIGHT_COLOR = Color.YELLOWGREEN;
     public static final Color WARNING_COLOR = Color.RED;
@@ -22,8 +21,7 @@ public class Tile extends StackPane
     private Rectangle warning;
     private Rectangle highlightCover;
 
-    public Tile(int row, int column, Board board)
-    {
+    public Tile(int row, int column, Board board) {
         this.board = board;
         position = new Position(row, column);
 
@@ -37,13 +35,10 @@ public class Tile extends StackPane
         warning = new Rectangle(Board.TILE_WIDTH, Board.TILE_WIDTH);
         highlightCover = new Rectangle(Board.TILE_WIDTH - HIGHLIGHT_WIDTH, Board.TILE_WIDTH - HIGHLIGHT_WIDTH);
 
-        if(isWhite)
-        {
+        if(isWhite) {
             square.setFill(WHITE_COLOR);
             highlightCover.setFill(WHITE_COLOR);
-        }
-        else
-        {
+        } else {
             square.setFill(BLACK_COLOR);
             highlightCover.setFill(BLACK_COLOR);
         }
@@ -60,20 +55,17 @@ public class Tile extends StackPane
         setOnMouseClicked(e -> board.clickedSquare(position));
     }
 
-    protected void highLight()
-    {
+    protected void highLight() {
         highlight.setVisible(true);
         highlightCover.setVisible(true);
     }
 
-    protected void warn()
-    {
+    protected void warn() {
         warning.setVisible(true);
         highlightCover.setVisible(true);
     }
 
-    protected void clear()
-    {
+    protected void clear() {
         highlight.setVisible(false);
         warning.setVisible(false);
         highlightCover.setVisible(false);

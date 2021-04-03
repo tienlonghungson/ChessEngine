@@ -1,7 +1,6 @@
 package src.chess.AI;
 
-public class Settings
-{
+public class Settings {
 //    public static boolean abPrunning = true;
 //    public static boolean transpositionTables = true;
 //    public static boolean iterativeDeepening = true;
@@ -20,5 +19,4 @@ public class Settings
 //
 //    public static int time = 30;
 //
-
 }

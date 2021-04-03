@@ -37,7 +37,7 @@ public class Knight extends Piece
     private void getMovesHelper(int colOffset, int rowOffset, LinkedList<Move> moves, Board board)
     {
         Position temp = this.position.getPositionWithOffset(colOffset, rowOffset);
-        if(board.inBounds(temp) && !board.hasFriendlyPieceAtPosition(temp, isWhite))
+        if(board.isInBounds(temp) && !board.hasFriendlyPieceAtPosition(temp, isWhite))
             moves.add(new Move(this, board, temp));
     }
 

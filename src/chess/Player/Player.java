@@ -17,18 +17,15 @@ public abstract class Player {
         this.isWhite = isWhite;
     }
 
-    public void setBoardController(BoardController boardController)
-    {
+    public void setBoardController(BoardController boardController) {
         this.boardController = boardController;
     }
 
-    public void setBoard(Board board)
-    {
+    public void setBoard(Board board) {
         this.board = board;
     }
 
-    public void returnMove(Move move)
-    {
+    public void returnMove(Move move) {
         boardController.giveNextMove(move);
     }
 
@@ -36,15 +33,11 @@ public abstract class Player {
     public abstract void forwardBoardInput(Position position);
     public abstract void stop();
     public abstract String toString();
-    public static Player parsePlayer(String playerType, boolean isWhite)
-    {
-        switch (playerType)
-        {
-            case "Human":
-                return new HumanPlayer(isWhite);
-            case "Computer":
-                return new ComputerPlayer(isWhite);
-        }
-        return null;
+    public static Player parsePlayer(String playerType, boolean isWhite) {
+        return switch (playerType) {
+            case "Human" -> new HumanPlayer(isWhite);
+            case "Computer" -> new ComputerPlayer(isWhite);
+            default -> null;
+        };
     }
 }

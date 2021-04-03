@@ -13,12 +13,14 @@ public class PositionMap<E>
             size++;
         this.size = size;
         mapE = new LinkedList[size];
-        for (int i = 0; i < mapE.length; i++)
+        for (int i = 0; i < mapE.length; i++) {
             mapE[i] = new LinkedList<>();
+        }
 
         mapP = new LinkedList[size];
-        for (int i = 0; i < mapP.length; i++)
+        for (int i = 0; i < mapP.length; i++) {
             mapP[i] = new LinkedList<>();
+        }
     }
 
     public void add(Position position, E e) {
@@ -31,8 +33,7 @@ public class PositionMap<E>
     public E get(Position position) {
         int pos = calculate(position) % size;
         int index = mapP[pos].indexOf(position);
-        if (index != -1)
-        {
+        if (index != -1) {
             System.out.printf("BOARD MATCH @ %s%n", position);
             return mapE[pos].get(index);
         }
@@ -42,8 +43,7 @@ public class PositionMap<E>
     public E remove(Position position) {
         int pos = calculate(position) % size;
         int index = mapP[pos].indexOf(position);
-        if (index != -1)
-        {
+        if (index != -1) {
             System.out.printf("BOARD MATCH @ %s%n", position);
             mapP[pos].remove(index);
             return mapE[pos].remove(index);

@@ -8,8 +8,7 @@ import src.position.Position;
 
 import java.util.LinkedList;
 
-public class King extends Piece implements FirstMoveMatters
-{
+public class King extends Piece implements FirstMoveMatters {
     public static final int SCORE = 400;
     public static final String ID = "K";
     public static final String NAME = "King";
@@ -17,20 +16,17 @@ public class King extends Piece implements FirstMoveMatters
 
     public boolean hasMoved;
 
-    public King (Position position, boolean isWhite, Board board)
-    {
+    public King (Position position, boolean isWhite, Board board) {
         this(position, isWhite, false, board);
     }
 
-    public King(Position position, boolean isWhite, boolean hasMoved, Board board)
-    {
+    public King(Position position, boolean isWhite, boolean hasMoved, Board board) {
         super(position, isWhite, board);
         this.hasMoved = hasMoved;
     }
 
     @Override
-    public LinkedList<Move> getMoves()
-    {
+    public LinkedList<Move> getMoves() {
         LinkedList<Move> moves = new LinkedList<>();
 
         moves.addAll(getMovesNoCastle());
@@ -39,8 +35,7 @@ public class King extends Piece implements FirstMoveMatters
         return moves;
     }
 
-    public LinkedList<Move> getMovesNoCastle()
-    {
+    public LinkedList<Move> getMovesNoCastle() {
         LinkedList<Move> moves = new LinkedList<>();
 
         getMovesHelper(1, 0, moves, board);
@@ -55,44 +50,44 @@ public class King extends Piece implements FirstMoveMatters
         return moves;
     }
 
-    public void getMovesHelper(int rowOffset, int colOffset, LinkedList<Move> moves, Board board)
-    {
+    public void getMovesHelper(int rowOffset, int colOffset, LinkedList<Move> moves, Board board) {
         Position temp = this.position.getPositionWithOffset(colOffset, rowOffset);
-        if(board.inBounds(temp) && !board.hasFriendlyPieceAtPosition(temp, isWhite))
+        if(board.isInBounds(temp) && !board.hasFriendlyPieceAtPosition(temp, isWhite)) {
             moves.add(setupMove(temp));
+        }
     }
 
-    public LinkedList<Move> getMovesCastle()
-    {
+    public LinkedList<Move> getMovesCastle() {
         LinkedList<Move> moves = new LinkedList<>();
 
-        if(!hasMoved && board.isSafeMove(this.position, isWhite))
-        {
+        if(!hasMoved && board.isSafeMove(this.position, isWhite)) {
             Piece leftPiece = board.getPiece(new Position(position.getRow(), 0));
-            if(leftPiece instanceof Rook)
-            {
-                if (!((Rook) leftPiece).hasMoved)
-                {
+            if(leftPiece instanceof Rook) {
+                if (!((Rook) leftPiece).hasMoved) {
                     boolean canCastle = true;
-                    for (int i = position.getCol() - 1; i > 0 && canCastle; i--)
-                        if(!board.isCleanMove(new Position(position.getRow(), i), isWhite))
+                    for (int i = position.getCol() - 1; i > 0 && canCastle; i--) {
+                        if (!board.isCleanMove(new Position(position.getRow(), i), isWhite)) {
                             canCastle = false;
-                    if(canCastle)
+                        }
+                    }
+                    if(canCastle) {
                         moves.add(new Castling(this, leftPiece, position.getPositionWithOffset(0, -2), position.getPositionWithOffset(0, -1), board));
+                    }
                 }
             }
 
             Piece rightPiece = board.getPiece(new Position(position.getRow(), Board.COLUMNS - 1));
-            if(rightPiece instanceof Rook)
-            {
-                if (!((Rook) rightPiece).hasMoved)
-                {
+            if(rightPiece instanceof Rook) {
+                if (!((Rook) rightPiece).hasMoved) {
                     boolean canCastle = true;
-                    for (int i = position.getCol() + 1; i < Board.COLUMNS - 1 && canCastle; i++)
-                        if(!board.isCleanMove(new Position(position.getRow(), i), isWhite))
+                    for (int i = position.getCol() + 1; i < Board.COLUMNS - 1 && canCastle; i++) {
+                        if (!board.isCleanMove(new Position(position.getRow(), i), isWhite)) {
                             canCastle = false;
-                    if(canCastle)
+                        }
+                    }
+                    if(canCastle) {
                         moves.add(new Castling(this, rightPiece, position.getPositionWithOffset(0, 2), position.getPositionWithOffset(0, 1), board));
+                    }
                 }
             }
         }
@@ -100,46 +95,40 @@ public class King extends Piece implements FirstMoveMatters
         return moves;
     }
 
-    private Move setupMove(Position position)
-    {
-        if(hasMoved)
+    private Move setupMove(Position position) {
+        if(hasMoved) {
             return new Move(this, board, position);
-        else
+        } else {
             return new FirstMove(this, board, position);
+        }
     }
 
     @Override
-    public int getScore()
-    {
+    public int getScore() {
         return SCORE;
     }
 
     @Override
-    public String getID()
-    {
+    public String getID() {
         return ID;
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return NAME;
     }
 
     @Override
-    public boolean getHasMoved()
-    {
+    public boolean getHasMoved() {
         return hasMoved;
     }
 
     @Override
-    public void setHasMoved(boolean hasMoved)
-    {
+    public void setHasMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
     }
 
-    public static King parseKing(String[] data, Board board)
-    {
+    public static King parseKing(String[] data, Board board) {
         Position position = Position.parsePosition(data[1] + data[2]);
         boolean isWhite = Boolean.parseBoolean(data[3]);
         boolean hasMoved = Boolean.parseBoolean(data[4]);

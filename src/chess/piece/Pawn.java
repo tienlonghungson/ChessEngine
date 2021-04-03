@@ -45,25 +45,25 @@ public class Pawn extends Piece implements FirstMoveMatters {
 
             //Forward one
             temp = this.position.getPositionWithOffset(forward(1), 0);
-            if (board.inBounds(temp) && !board.hasPieceAtPosition(temp)) {
+            if (board.isInBounds(temp) && !board.hasPieceAtPosition(temp)) {
                 moves.addAll(setupMove(temp.getPositionWithOffset()));
                 //Forward two
                 if (!hasMoved) {
                     temp = this.position.getPositionWithOffset(forward(2), 0);
-                    if (board.inBounds(temp) && !board.hasPieceAtPosition(temp)) {
+                    if (board.isInBounds(temp) && !board.hasPieceAtPosition(temp)) {
                         moves.addAll(setupMove(temp.getPositionWithOffset()));
                     }
                 }
             }
             //Capture right
             temp = this.position.getPositionWithOffset(forward(1), 1);
-            if (board.inBounds(temp) && board.hasHostilePieceAtPosition(temp, isWhite)) {
+            if (board.isInBounds(temp) && board.hasHostilePieceAtPosition(temp, isWhite)) {
                 moves.addAll(setupMove(temp.getPositionWithOffset()));
             }
 
             //Capture left
             temp = this.position.getPositionWithOffset(forward(1), -1);
-            if (board.inBounds(temp) && board.hasHostilePieceAtPosition(temp, isWhite)) {
+            if (board.isInBounds(temp) && board.hasHostilePieceAtPosition(temp, isWhite)) {
                 moves.addAll(setupMove(temp.getPositionWithOffset()));
             }
 
@@ -116,27 +116,25 @@ public class Pawn extends Piece implements FirstMoveMatters {
     }
 
     @Override
-    public void updatePosition(Position position, boolean isVisual)
-    {
+    public void updatePosition(Position position, boolean isVisual) {
         super.updatePosition(position, isVisual);
-        if(upgradePiece != null)
+        if(upgradePiece != null) {
             upgradePiece.updatePosition(position, false);
+        }
     }
 
-    public int forward(int steps)
-    {
+    public int forward(int steps) {
         steps = Math.abs(steps);
-        if(isWhite)
+        if(isWhite) {
             return -1 * steps;
-        else
+        } else {
             return steps;
+        }
     }
 
-    public void upgrade(Piece piece, boolean isVisual)
-    {
+    public void upgrade(Piece piece, boolean isVisual) {
         this.upgradePiece = piece;
-        if(isVisual)
-        {
+        if(isVisual) {
             oldImage = getImage();
             piece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/Chess_Pieces");
             setImage(piece.getImage());
@@ -144,18 +142,15 @@ public class Pawn extends Piece implements FirstMoveMatters {
         }
     }
 
-    public void downgrade(boolean isVisual)
-    {
+    public void downgrade(boolean isVisual) {
         upgradePiece = null;
-        if(isVisual)
-        {
+        if(isVisual) {
             setImage(oldImage);
             oldImage = null;
         }
     }
 
-    public static Pawn parsePawn(String[] data, Board board)
-    {
+    public static Pawn parsePawn(String[] data, Board board) {
         Position position = Position.parsePosition(data[1] + data[2]);
         boolean isWhite = Boolean.parseBoolean(data[3]);
         boolean hasMoved = Boolean.parseBoolean(data[4]);

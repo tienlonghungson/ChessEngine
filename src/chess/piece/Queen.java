@@ -34,7 +34,7 @@ public class Queen extends Piece {
 
     private void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves) {
         Position temp = this.position.getPositionWithOffset(rowInc, colInc);
-        while(board.inBounds(temp)) {
+        while(board.isInBounds(temp)) {
             if(board.hasFriendlyPieceAtPosition(temp, isWhite)) {
                 break;
             } else if(board.hasHostilePieceAtPosition(temp, isWhite)) {

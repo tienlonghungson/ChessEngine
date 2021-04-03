@@ -15,8 +15,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 
-public class Launcher extends Application
-{
+public class Launcher extends Application {
     public BoardController b;
     private Stage launcherWindow;
     public static File filePath = new File((new File("")).getAbsolutePath() + "/Chess");
@@ -25,8 +24,7 @@ public class Launcher extends Application
     private Player whitePlayer;
 
     @Override
-    public void start(Stage launcherWindow)
-    {
+    public void start(Stage launcherWindow) {
         System.out.println(filePath.getAbsolutePath());
         this.launcherWindow = launcherWindow;
 
@@ -40,15 +38,12 @@ public class Launcher extends Application
 
         ChoiceBox<String> whitePlayers = new ChoiceBox<>();
         whitePlayers.getItems().addAll(Player.PLAYER_TYPES);
-        whitePlayers.setOnAction(e -> {
-            whitePlayer = Player.parsePlayer(whitePlayers.getValue(), true);
-        });
+
+        whitePlayers.setOnAction(e -> whitePlayer = Player.parsePlayer(whitePlayers.getValue(), true));
 
         ChoiceBox<String> blackPlayers = new ChoiceBox<>();
         blackPlayers.getItems().addAll(Player.PLAYER_TYPES);
-        blackPlayers.setOnAction(e -> {
-            blackPlayer = Player.parsePlayer(blackPlayers.getValue(), false);
-        });
+        blackPlayers.setOnAction(e -> blackPlayer = Player.parsePlayer(blackPlayers.getValue(), false));
 
 
         HBox playerSelectors = new HBox(10);
@@ -77,8 +72,7 @@ public class Launcher extends Application
 //        b.startDisplay();
     }
 
-    public static void main(String[] args)
-    {
+    public static void main(String[] args) {
         launch();
     }
 }

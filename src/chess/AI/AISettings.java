@@ -16,15 +16,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-public class AISettings
-{
+public class AISettings {
     public String name;
     public String description;
     public int depth;
-    public boolean alphaBetaPrunning;
+    public boolean alphaBetaPruning;
     public boolean iterativeDeepening;
-    public boolean useTimelimit;
-    public int timelimit;
+    public boolean useTimeLimit;
+    public int timeLimit;
     public int iterativeDeepeningStartDepth;
     public boolean killerHeuristic;
     public boolean transpositionTable;
@@ -33,21 +32,16 @@ public class AISettings
     public int checkForStalemateDepth;
     public boolean addRandomness;
 
-    private static AISettings getAISettings(String filePath)
-    {
+    private static AISettings getAISettings(String filePath) {
         HashMap<String, String> rawSettings = new HashMap<>();
 
-        try
-        {
+        try {
             Scanner in = new Scanner(new File(filePath));
-            while(in.hasNextLine())
-            {
+            while(in.hasNextLine()) {
                 String[] rawData = in.nextLine().split(":\\s+");
                 rawSettings.put(rawData[0], rawData[1]);
             }
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             System.err.println("INVALID AISETTINGS FILE!");
             System.out.println(filePath);
             System.exit(-1);
@@ -55,11 +49,9 @@ public class AISettings
 
         AISettings settings = new AISettings();
 
-        for (String key: rawSettings.keySet())
-        {
+        for (String key: rawSettings.keySet()) {
             String value = rawSettings.get(key);
-            switch (key)
-            {
+            switch (key) {
                 case "name":
                     settings.name = value;
                     break;
@@ -70,18 +62,17 @@ public class AISettings
                     settings.depth = Integer.parseInt(value);
                     break;
                 case "alphaBetaPrunning":
-                    settings.alphaBetaPrunning = Boolean.parseBoolean(value);
+                    settings.alphaBetaPruning = Boolean.parseBoolean(value);
                     break;
                 case "iterativeDeepening":
                     settings.iterativeDeepening = Boolean.parseBoolean(value);
                     break;
                 case "timelimit":
-                    if (value.equalsIgnoreCase("unlimited"))
-                        settings.useTimelimit = false;
-                    else
-                    {
-                        settings.useTimelimit = true;
-                        settings.timelimit = Integer.parseInt(value);
+                    if (value.equalsIgnoreCase("unlimited")) {
+                        settings.useTimeLimit = false;
+                    } else {
+                        settings.useTimeLimit = true;
+                        settings.timeLimit = Integer.parseInt(value);
                     }
                     break;
                 case "iterativeDeepeningStartDepth":
@@ -111,8 +102,7 @@ public class AISettings
         return settings;
     }
 
-    public static AISettings chooseAISettings()
-    {
+    public static AISettings chooseAISettings() {
         Stage window = new Stage();
         window.initModality(Modality.APPLICATION_MODAL);
         window.setTitle("AI Selection");
@@ -121,8 +111,9 @@ public class AISettings
 
         LinkedList<String> files = getAIFiles(aiPath);
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        for (String file: files)
+        for (String file: files) {
             choiceBox.getItems().add(file.substring(0, file.length() - 3));
+        }
         choiceBox.setValue(files.getFirst().substring(0, files.getFirst().length() - 3));
 
         Button button = new Button("Done");
@@ -144,14 +135,13 @@ public class AISettings
         return getAISettings(aiPath + "/" + choiceBox.getValue() + ".ai");
     }
 
-    private static LinkedList<String> getAIFiles(String path)
-    {
+    private static LinkedList<String> getAIFiles(String path) {
         File savesPath = new File(path);
         LinkedList<String> aiFiles = new LinkedList<>();
-        for (File file: savesPath.listFiles())
-        {
-            if(file.isFile() && file.getName().contains(".ai"))
+        for (File file: savesPath.listFiles()) {
+            if(file.isFile() && file.getName().contains(".ai")) {
                 aiFiles.add(file.getName());
+            }
         }
         return aiFiles;
     }

@@ -2,7 +2,6 @@ package src.chess.Board;
 
 import src.chess.Launcher;
 import src.chess.move.Move;
-//import dupreez.daniel.chess.piece.*;
 import src.position.Position;
 import javafx.scene.Parent;
 
@@ -17,8 +16,7 @@ import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-public class Board
-{
+public class Board {
     public static final int TILE_WIDTH = 64;
     public static final int ROWS = 8;
     public static final int COLUMNS = 8;
@@ -33,39 +31,49 @@ public class Board
 
     private Piece[][] board;
 
-    public Board(String[] whitePieces, String[] blackPieces, BoardController controller)
-    {
+    public Board(String[] whitePieces, String[] blackPieces, BoardController controller) {
         this.whitePieces = new Piece[whitePieces.length];
         this.blackPieces = new Piece[blackPieces.length];
         board = new Piece[ROWS][COLUMNS];
 
-        for (int i = 0; i < whitePieces.length; i++)
-        {
-            Piece piece = Piece.parsePiece(whitePieces[i], this);
-            this.whitePieces[i] = piece;
+//        for (int i = 0; i < whitePieces.length; i++) {
+//            Piece piece = Piece.parsePiece(whitePieces[i], this);
+//            this.whitePieces[i] = piece;
+//            this.put(piece.getPosition(), piece);
+//        }
+
+        int i=0;
+        for (String whitePiece:
+             whitePieces) {
+            Piece piece = Piece.parsePiece(whitePiece,this);
+            this.whitePieces[i++]= piece;
             this.put(piece.getPosition(), piece);
         }
 
-        for (int i = 0; i < blackPieces.length; i++)
-        {
-            Piece piece = Piece.parsePiece(blackPieces[i], this);
-            this.blackPieces[i] = piece;
-            this.put(piece.getPosition(), piece);
+//        for (int i = 0; i < blackPieces.length; i++) {
+//            Piece piece = Piece.parsePiece(blackPieces[i], this);
+//            this.blackPieces[i] = piece;
+//            this.put(piece.getPosition(), piece);
+//        }
+
+        i=0;
+        for (String blackPiece:
+             blackPieces) {
+            Piece piece = Piece.parsePiece(blackPiece,this);
+            this.blackPieces[i++] = piece;
+            this.put(piece.getPosition(),piece);
         }
 
         this.controller = controller;
     }
 
-    public Parent getGUI()
-    {
+    public Parent getGUI() {
         //Board
         Pane root = new Pane();
         root.setPrefSize(ROWS * TILE_WIDTH, COLUMNS * TILE_WIDTH);
         grid = new Tile[ROWS][COLUMNS];
-        for (int r = 0; r < ROWS; r++)
-        {
-            for (int c = 0; c < COLUMNS; c++)
-            {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLUMNS; c++) {
                 Tile tile = new Tile(r, c, this);
                 grid[r][c] = tile;
                 root.getChildren().add(tile);
@@ -73,155 +81,145 @@ public class Board
         }
 
         //Pieces
-        for (Piece whitePiece: whitePieces)
-        {
+        for (Piece whitePiece: whitePieces) {
             whitePiece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/Chess_Pieces");
             root.getChildren().add(whitePiece);
         }
 
-        for (Piece blackPiece: blackPieces)
-        {
+        for (Piece blackPiece: blackPieces) {
             blackPiece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/Chess_Pieces");
             root.getChildren().add(blackPiece);
         }
         return root;
     }
 
-    public void clickedSquare(Position position)
-    {
+    public void clickedSquare(Position position) {
         controller.clickedSquare(position);
     }
 
-    public void giveBestMove(Move move)
-    {
+    public void giveBestMove(Move move) {
         controller.giveNextMove(move);
     }
 
-    public void highlight(Position position)
-    {
+    public void highlight(Position position) {
         grid[position.getRow()][position.getCol()].highLight();
     }
 
-    public void warn(Position position)
-    {
+    public void warn(Position position) {
         grid[position.getRow()][position.getCol()].warn();
     }
 
-    public void clearHighlights()
-    {
-        for (int r = 0; r < grid.length; r++)
-            for (int c = 0; c < grid[r].length; c++)
-                grid[r][c].clear();
+    public void clearHighlights() {
+        for (Tile[] tiles : grid) {
+            for (Tile tile : tiles) {
+                tile.clear();
+            }
+        }
     }
-
-    public LinkedList<Move> getAllMoves(boolean isWhite)
-    {
+    public LinkedList<Move> getAllMoves(boolean isWhite) {
         Piece[] pieces = isWhite ? whitePieces : blackPieces;
         LinkedList<Move> moves = new LinkedList<>();
-        for (Piece piece: pieces)
-            if(!piece.isDead())
+        for (Piece piece: pieces) {
+            if (!piece.isDead()) {
                 moves.addAll(piece.getMoves());
-        return moves;
-    }
-
-    private LinkedList<Move> getAllMovesNoCastle(boolean isWhite)
-    {
-        Piece[] pieces = isWhite ? whitePieces : blackPieces;
-        LinkedList<Move> moves = new LinkedList<>();
-        for (Piece piece: pieces)
-        {
-            if(!piece.isDead())
-            {
-                if (piece instanceof King)
-                    moves.addAll(((King) piece).getMovesNoCastle());
-                else
-                    moves.addAll(piece.getMoves());
             }
         }
         return moves;
     }
 
-    public LinkedList<Move> getAllValidMoves(boolean isWhite)
-    {
+    private LinkedList<Move> getAllMovesNoCastle(boolean isWhite) {
+        Piece[] pieces = isWhite ? whitePieces : blackPieces;
+        LinkedList<Move> moves = new LinkedList<>();
+        for (Piece piece: pieces) {
+            if(!piece.isDead()) {
+                if (piece instanceof King) {
+                    moves.addAll(((King) piece).getMovesNoCastle());
+                } else {
+                    moves.addAll(piece.getMoves());
+                }
+            }
+        }
+        return moves;
+    }
+
+    public LinkedList<Move> getAllValidMoves(boolean isWhite) {
         LinkedList<Move> validMoves = new LinkedList<>();
 
         Piece[] pieces = isWhite ? whitePieces : blackPieces;
-        for (Piece piece: pieces)
-            if(!piece.isDead())
+        for (Piece piece: pieces) {
+            if (!piece.isDead()) {
                 validMoves.addAll(piece.getValidMoves());
-
+            }
+        }
         return validMoves;
     }
 
-    public Piece getKing(boolean isWhite)
-    {
+    public Piece getKing(boolean isWhite) {
         Piece[] pieces = isWhite ? whitePieces : blackPieces;
-        for (Piece piece: pieces)
-            if(piece instanceof King)
+        for (Piece piece: pieces) {
+            if (piece instanceof King) {
                 return piece;
+            }
+        }
         return null;
     }
 
-    public boolean checkForCheck(boolean isWhite)
-    {
+    public boolean checkForCheck(boolean isWhite) {
         Piece king = getKing(isWhite);
-        if(!isSafeMove(king.getPosition(), isWhite))
-        {
+        if(!isSafeMove(king.getPosition(), isWhite)) {
             warn(king.getPosition());
             return true;
         }
         return false;
     }
 
-    public boolean checkIfKingCanMove(boolean isWhite)
-    {
+    public boolean checkIfKingCanMove(boolean isWhite) {
         return getKing(isWhite).getValidMoves().size() != 0;
     }
 
-    public boolean checkForStaleMate(boolean isWhite)
-    {
+    public boolean checkForStaleMate(boolean isWhite) {
         return !checkIfKingCanMove(isWhite) && getAllValidMoves(isWhite).size() == 0;
-
     }
 
-    public boolean checkForCheckMate(boolean isWhite)
-    {
+    public boolean checkForCheckMate(boolean isWhite) {
         return !isSafeMove(getKing(isWhite).getPosition(), isWhite) && getAllValidMoves(isWhite).size() == 0;
     }
 
-    public boolean openFile(Position position)
-    {
-        for (int i = 0; i < Board.ROWS; i++)
-        {
+    public boolean openFile(Position position) {
+        for (int i = 0; i < Board.ROWS; i++) {
             Piece p = getPiece(new Position(i, position.getCol()));
-            if (p != null && p instanceof Pawn)
+            if (p instanceof Pawn) {
                 return false;
+            }
         }
         return true;
     }
 
-    public int score()
-    {
+    public int score() {
         int score = 0;
-        for (Piece piece: whitePieces)
-            if(!piece.isDead())
+        for (Piece piece: whitePieces) {
+            if (!piece.isDead()) {
                 score += piece.getScore();
-        for (Piece piece: blackPieces)
-            if(!piece.isDead())
+            }
+        }
+        for (Piece piece: blackPieces) {
+            if (!piece.isDead()) {
                 score -= piece.getScore();
+            }
+        }
         return score;
     }
 
     /**
      * Returns the Piece at the specified position
      *
-     * @param position
-     * @return
+     * @param position the specified position
+     * @return the Piece at {@code position}
      */
-    public Piece getPiece(Position position)
-    {
-        if(inBounds(position))
+    public Piece getPiece(Position position) {
+        if(isInBounds(position)) {
             return board[position.getRow()][position.getCol()];
+        }
         else
             return null;
     }
@@ -229,21 +227,19 @@ public class Board
     /**
      * Sets the value in the board array at the position to the specified piece
      *
-     * @param position
-     * @param piece
+     * @param position the position which is got the piece
+     * @param piece which is placed at position
      */
-    public void put(Position position, Piece piece)
-    {
+    public void put(Position position, Piece piece) {
         board[position.getRow()][position.getCol()] = piece;
     }
 
     /**
      * Sets the value in the board array to null
      *
-     * @param position
+     * @param position whose the piece is removed
      */
-    public void remove(Position position)
-    {
+    public void remove(Position position) {
         board[position.getRow()][position.getCol()] = null;
     }
 
@@ -263,11 +259,10 @@ public class Board
     /**
      * Removes the piece from the board array and sets the pieces' isDead value to true
      *
-     * @param piece
-     * @param isVisual
+     * @param piece which is dead
+     * @param isVisual whether the move is visible
      */
-    public void kill(Piece piece, boolean isVisual)
-    {
+    public void kill(Piece piece, boolean isVisual) {
         this.remove(piece.getPosition());
         piece.kill(isVisual);
     }
@@ -275,11 +270,10 @@ public class Board
     /**
      * Adds the piece to the board at its last position and sets its isDead value to false
      *
-     * @param piece
-     * @param isVisual
+     * @param piece which is revived
+     * @param isVisual whether the revival is visible
      */
-    public void revive(Piece piece, boolean isVisual)
-    {
+    public void revive(Piece piece, boolean isVisual) {
         this.put(piece.getPosition(), piece);
         piece.revive(isVisual);
     }
@@ -287,11 +281,10 @@ public class Board
     /**
      * Checks to see if there is a piece at the specified position
      *
-     * @param position
+     * @param position the position which is checked
      * @return Returns true if the position in the board array is not null
      */
-    public boolean hasPieceAtPosition(Position position)
-    {
+    public boolean hasPieceAtPosition(Position position) {
         Piece piece = this.getPiece(position);
         return piece != null;
     }
@@ -299,12 +292,11 @@ public class Board
     /**
      * Checks to see if there is a piece at the specified position that is the opposing color
      *
-     * @param position
-     * @param isWhite
+     * @param position the position which is checked
+     * @param isWhite whether the piece at {@code position} is white or black
      * @return Returns true if the position in the board array is not null and the piece is the opposite color
      */
-    public boolean hasHostilePieceAtPosition(Position position, boolean isWhite)
-    {
+    public boolean hasHostilePieceAtPosition(Position position, boolean isWhite) {
         Piece piece = this.getPiece(position);
         return piece != null && piece.isWhite() != isWhite;
     }
@@ -312,12 +304,11 @@ public class Board
     /**
      * Checks to see if there is a piece at the specified position that is the same color
      *
-     * @param position
-     * @param isWhite
+     * @param position the position which is checked
+     * @param isWhite whether the piece at {@code position} is white or black
      * @return Returns true if the position in the board array is not null and the piece is the same color
      */
-    public boolean hasFriendlyPieceAtPosition(Position position, boolean isWhite)
-    {
+    public boolean hasFriendlyPieceAtPosition(Position position, boolean isWhite) {
         Piece piece = this.getPiece(position);
         return piece != null && piece.isWhite() == isWhite;
     }
@@ -325,11 +316,10 @@ public class Board
     /**
      * Checks to see if the position is within the bounds of the size of the board
      *
-     * @param position
-     * @return
+     * @param position the position which is checked
+     * @return whether the position is in the Board
      */
-    public boolean inBounds(Position position)
-    {
+    public boolean isInBounds(Position position) {
         int column = position.getCol();
         int row = position.getRow();
 
@@ -339,57 +329,54 @@ public class Board
     /**
      * Checks to make sure that there is no piece at the specified position and that no opponent piece is attacking the position
      *
-     * @param position
-     * @param isWhite
-     * @return
+     * @param position the position which is checked
+     * @param isWhite whether the piece is black or white
+     * @return true if the position is not under attack and contains no piece
      */
-    public boolean isCleanMove(Position position, Boolean isWhite)
-    {
+    public boolean isCleanMove(Position position, Boolean isWhite) {
         return !hasPieceAtPosition(position) && isSafeMove(position, isWhite);
     }
 
     /**
      * Checks to see if any piece of the opposite color is attacking the specified position
      *
-     * @param position
-     * @param isWhite
-     * @return
+     * @param position the position which is checked
+     * @param isWhite whether the piece is black or white
+     * @return true if the position is not under attack
      */
-    public boolean isSafeMove(Position position, Boolean isWhite)
-    {
+    public boolean isSafeMove(Position position, Boolean isWhite) {
         LinkedList<Move> opponentMoves = getAllMovesNoCastle(!isWhite);
-        for (Move move: opponentMoves)
-            if(move.getEndPosition().equals(position))
+        for (Move move: opponentMoves) {
+            if (move.getEndPosition().equals(position)) {
                 return false;
+            }
+        }
         return true;
     }
 
     /**
      * Sets up a new Board object from a specified file
      *
-     * @param file
-     * @return
+     * @param file contains the Board information
+     * @return a {@code Board} object representing the Board from file
      */
-    public static Board setupFromFile(File file, BoardController controller)
-    {
-        try
-        {
+    public static Board setupFromFile(File file, BoardController controller) {
+        try {
             Scanner in = new Scanner(file);
 
             int numberOfWhitePieces = Integer.parseInt(in.nextLine().replaceAll("\\D", ""));
             String[] whitePieces = new String[numberOfWhitePieces];
-            for (int i = 0; i < numberOfWhitePieces; i++)
+            for (int i = 0; i < numberOfWhitePieces; i++) {
                 whitePieces[i] = in.nextLine();
+            }
 
             int numberOfBlackPieces = Integer.parseInt(in.nextLine().replaceAll("\\D", ""));
             String[] blackPieces = new String[numberOfWhitePieces];
-            for (int i = 0; i < numberOfBlackPieces; i++)
+            for (int i = 0; i < numberOfBlackPieces; i++) {
                 blackPieces[i] = in.nextLine();
-
+            }
             return new Board(whitePieces, blackPieces, controller);
-        }
-        catch (FileNotFoundException e)
-        {
+        } catch (FileNotFoundException e) {
             System.err.print("CANNOT READ BOARD FROM FILE:");
             System.err.println(file.getAbsolutePath());
         }
@@ -397,26 +384,23 @@ public class Board
         return null;
     }
 
-    public void print()
-    {
-        for (int i = 0; i < 8; i++)
-        {
+    public void print() {
+        for (int i = 0; i < 8; i++) {
             System.out.print(8 - i + " |");
-            for (int j = 0; j < 8; j++)
-            {
+            for (int j = 0; j < 8; j++) {
                 Position position = new Position(i, j);
                 Piece piece = this.getPiece(position);
-                if (piece != null)
+                if (piece != null) {
                     System.out.printf("%2s|", piece.isWhite() ? piece.getID().toUpperCase() : piece.getID().toLowerCase());
-                else
+                } else {
                     System.out.print("  |");
+                }
             }
             System.out.println();
         }
         System.out.print("   ");
 
-        for (int i = 65; i < 65 + 8; i++)
-        {
+        for (int i = 65; i < 65 + 8; i++) {
             System.out.printf(" %c ", i);
         }
         System.out.println();
