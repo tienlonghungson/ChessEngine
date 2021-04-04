@@ -2,7 +2,7 @@ package src.chess.Player;
 
 import src.chess.AI.AI;
 import src.chess.AI.AISettings;
-import src.chess.Board.Board;
+import src.chess.Board.ActiveBoard;
 import src.position.Position;
 
 public class ComputerPlayer extends Player {
@@ -14,9 +14,9 @@ public class ComputerPlayer extends Player {
     }
 
     @Override
-    public void setBoard(Board board) {
-        super.setBoard(board);
-        ai.setBoard(board);
+    public void setActiveBoard(ActiveBoard activeBoard) {
+        super.setActiveBoard(activeBoard);
+        ai.setActiveBoard(activeBoard);
     }
 
     public void calculateNextMove() {

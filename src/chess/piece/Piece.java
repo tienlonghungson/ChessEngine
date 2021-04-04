@@ -1,6 +1,7 @@
 package src.chess.piece;
 
 import src.chess.Board.Board;
+import src.chess.Board.ActiveBoard;
 import src.chess.move.Move;
 import src.position.Position;
 import src.position.PositionMap;
@@ -19,26 +20,57 @@ public abstract class Piece extends ImageView {
     protected boolean isWhite;
     protected boolean isDead;
     protected Position position;
-    protected Board board;
+    protected ActiveBoard activeBoard;
 
-    public Piece(Position position, boolean isWhite, Board board) {
+    public Piece(Position position, boolean isWhite, ActiveBoard boardActions) {
         this.position = position;
         this.isWhite = isWhite;
-        this.board = board;
+        this.activeBoard = boardActions;
         this.isDead = false;
     }
 
-    public abstract LinkedList<Move> getMoves();
+    /**
+     *
+     * @return the list of possible moves (including valid moves and moves can cause the king to be unsafe)
+     */
+    public LinkedList<Move> getMoves(){
+        LinkedList<Move> moves = new LinkedList<>();
+        final int[][] moveDirections = moveDirections();
+        for (int[] direction:
+             moveDirections) {
+            getMovesHelper(direction[0],direction[1],moves);
+        }
+        return moves;
+    }
 
+    /**
+     * check if the moves in direction determine by {@code (rowInc,colInc)} can be executed
+     * @param rowInc x coordinate of direction
+     * @param colInc y coordinate of direction
+     * @param moves contains the moves if they are valid
+     */
+    protected abstract void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves);
+
+    /**
+     *
+     * @return the array identifies direction of possible moves
+     */
+    protected abstract int[][] moveDirections();
+
+    /**
+     * valid moves are list of possible moves excluding moves cause the king to be unsafe
+     * @return list of valid move
+     */
     public LinkedList<Move> getValidMoves() {
         LinkedList<Move> validMoves = new LinkedList<>();
         LinkedList<Move> allMoves = getMoves();
 
-        Piece king = board.getKing(isWhite);
+        Piece king = activeBoard.getKing(isWhite);
 
         for (Move move: allMoves) {
             move.doMove(false);
-            if(board.isSafeMove(king.getPosition(), isWhite)) {
+            // check if this move cause the king to be unsafe
+            if(activeBoard.isSafeMove(king.getPosition(), isWhite)) {
                 validMoves.add(move);
             }
             move.undoMove(false);
@@ -110,9 +142,7 @@ public abstract class Piece extends ImageView {
 
             setTranslateX(position.getCol() * Board.TILE_WIDTH);
             setTranslateY(position.getRow() * Board.TILE_WIDTH);
-            setOnMouseClicked(e -> {
-                board.clickedSquare(position);
-            });
+            setOnMouseClicked(e -> activeBoard.clickedSquare(position));
         } catch(FileNotFoundException e) {
             System.err.printf("NO SUCH FILE \"%s\"%n", filePath);
         }

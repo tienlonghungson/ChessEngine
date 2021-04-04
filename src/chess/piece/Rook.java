@@ -1,5 +1,6 @@
 package src.chess.piece;
 
+import src.chess.Board.ActiveBoard;
 import src.chess.Board.Board;
 import src.chess.move.FirstMove;
 import src.chess.move.Move;
@@ -11,37 +12,25 @@ public class Rook extends Piece implements FirstMoveMatters {
     public static final int SCORE = 5;
     public static final String ID = "R";
     public static final String NAME = "Rook";
+    private static final int[][] moveDirections =  {{1,0},{-1,0},{0,1},{0,-1}};
 
     public boolean hasMoved;
 
-    public Rook (Position position, boolean isWhite, Board board)
-    {
-        this(position, isWhite, false, board);
+    public Rook (Position position, boolean isWhite, ActiveBoard activeBoard) {
+        this(position, isWhite, false, activeBoard);
     }
 
-    public Rook(Position position, boolean isWhite, boolean hasMoved, Board board) {
-        super(position, isWhite, board);
+    public Rook(Position position, boolean isWhite, boolean hasMoved, ActiveBoard activeBoard) {
+        super(position, isWhite, activeBoard);
         this.hasMoved = hasMoved;
     }
 
-    @Override
-    public LinkedList<Move> getMoves() {
-        LinkedList<Move> moves = new LinkedList<>();
-
-        getMovesHelper(1, 0, moves);
-        getMovesHelper(-1, 0, moves);
-        getMovesHelper(0, 1, moves);
-        getMovesHelper(0, -1, moves);
-
-        return moves;
-    }
-
-    private void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves) {
+    protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves) {
         Position temp = this.position.getPositionWithOffset(rowInc, colInc);
-        while(board.isInBounds(temp)) {
-            if(board.hasFriendlyPieceAtPosition(temp, isWhite)) {
+        while(activeBoard.isInBounds(temp)) {
+            if(activeBoard.hasFriendlyPieceAtPosition(temp, isWhite)) {
                 break;
-            } else if (board.hasHostilePieceAtPosition(temp, isWhite)) {
+            } else if (activeBoard.hasHostilePieceAtPosition(temp, isWhite)) {
                 moves.add(setupMove(temp.getPositionWithOffset()));
                 break;
             }
@@ -50,12 +39,22 @@ public class Rook extends Piece implements FirstMoveMatters {
         }
     }
 
+    /**
+     * set up the move to the position
+     * @param position end position of the move
+     * @return FirstMove object if this is the first move, Move otherwise
+     */
     private Move setupMove(Position position) {
         if(hasMoved) {
-            return new Move(this, board, position);
+            return new Move(this, activeBoard, position);
         } else {
-            return new FirstMove(this, board, position);
+            return new FirstMove(this, activeBoard, position);
         }
+    }
+
+    @Override
+    protected int[][] moveDirections() {
+        return moveDirections;
     }
 
     @Override

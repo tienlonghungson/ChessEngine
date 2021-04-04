@@ -1,5 +1,6 @@
 package src.chess.move;
 
+import src.chess.Board.ActiveBoard;
 import src.chess.Board.Board;
 import src.chess.piece.Piece;
 import src.position.Position;
@@ -20,10 +21,10 @@ public class Castling extends FirstMove {
      * @param rook in the castle move
      * @param endKing position of King after castling
      * @param endRook position of Rook after castling
-     * @param board presentation board
+     * @param activeBoard presentation board
      */
-    public Castling(Piece king, Piece rook, Position endKing, Position endRook, Board board) {
-        super(king, board, endKing);
+    public Castling(Piece king, Piece rook, Position endKing, Position endRook, ActiveBoard activeBoard) {
+        super(king, activeBoard, endKing);
         this.startRook = rook.getNewPosition();
         this.rook = rook;
         this.endRook = endRook;
@@ -32,12 +33,12 @@ public class Castling extends FirstMove {
     @Override
     public void doMove(boolean isVisual) {
         super.doMove(isVisual);
-        super.board.updatePosition(rook, endRook, isVisual);
+        super.activeBoard.updatePosition(rook, endRook, isVisual);
     }
 
     @Override
     public void undoMove(boolean isVisual) {
         super.undoMove(isVisual);
-        super.board.updatePosition(rook, startRook, isVisual);
+        super.activeBoard.updatePosition(rook, startRook, isVisual);
     }
 }

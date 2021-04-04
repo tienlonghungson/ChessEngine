@@ -1,5 +1,7 @@
 package src.chess;
 
+import src.chess.Board.ActiveBoard;
+import src.chess.Board.Board;
 import src.chess.Board.BoardController;
 import src.chess.Player.Player;
 import javafx.application.Application;
@@ -52,6 +54,7 @@ public class Launcher extends Application {
 
         Button button = new Button("Done");
         button.setOnAction(e -> {
+//            ActiveBoard activeBoard = Board.setupFromFile(new File(filePath.getAbsolutePath() + "/Boards/DefaultBoard.txt"),b);
             b = new BoardController(filePath.getAbsolutePath() + "/Boards/DefaultBoard.txt", whitePlayer, blackPlayer);
             launcherWindow.close();
             b.startDisplay();

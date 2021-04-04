@@ -6,6 +6,8 @@ This is just the demo engine.
 TO-DO :
 - Redesign - Separate engine and GUI
 - Speed-up Engine
+- Allow removed for human player
+- Restarts when game ends
 - Maybe add a Reinforcement Learning model  
 
 Requirement :

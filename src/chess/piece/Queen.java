@@ -1,5 +1,6 @@
 package src.chess.piece;
 
+import src.chess.Board.ActiveBoard;
 import src.chess.Board.Board;
 import src.chess.move.Move;
 import src.position.Position;
@@ -11,39 +12,29 @@ public class Queen extends Piece {
     public static final int SCORE = 9;
     public static final String ID = "Q";
     public static final String NAME = "Queen";
+    private static final int[][] moveDirections = {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1}};
 
-    public Queen (Position position, boolean isWhite, Board board) {
-        super(position, isWhite, board);
+    public Queen (Position position, boolean isWhite, ActiveBoard activeBoard) {
+        super(position, isWhite, activeBoard);
+    }
+
+     protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves) {
+        Position temp = this.position.getPositionWithOffset(rowInc, colInc);
+        while(activeBoard.isInBounds(temp)) {
+            if(activeBoard.hasFriendlyPieceAtPosition(temp, isWhite)) {
+                break;
+            } else if(activeBoard.hasHostilePieceAtPosition(temp, isWhite)) {
+                moves.add(new Move(this, activeBoard, temp.getPositionWithOffset()));
+                break;
+            }
+            moves.add(new Move(this, activeBoard, temp.getPositionWithOffset()));
+            temp = temp.getPositionWithOffset(rowInc, colInc);
+        }
     }
 
     @Override
-    public LinkedList<Move> getMoves() {
-        LinkedList<Move> moves = new LinkedList<>();
-
-        getMovesHelper(1, 0, moves);
-        getMovesHelper(1, 1, moves);
-        getMovesHelper(0, 1, moves);
-        getMovesHelper(-1, 1, moves);
-        getMovesHelper(-1, 0, moves);
-        getMovesHelper(-1, -1, moves);
-        getMovesHelper(0, -1, moves);
-        getMovesHelper(1, -1, moves);
-
-        return moves;
-    }
-
-    private void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves) {
-        Position temp = this.position.getPositionWithOffset(rowInc, colInc);
-        while(board.isInBounds(temp)) {
-            if(board.hasFriendlyPieceAtPosition(temp, isWhite)) {
-                break;
-            } else if(board.hasHostilePieceAtPosition(temp, isWhite)) {
-                moves.add(new Move(this, board, temp.getPositionWithOffset()));
-                break;
-            }
-            moves.add(new Move(this, board, temp.getPositionWithOffset()));
-            temp = temp.getPositionWithOffset(rowInc, colInc);
-        }
+    protected int[][] moveDirections() {
+        return moveDirections;
     }
 
     @Override

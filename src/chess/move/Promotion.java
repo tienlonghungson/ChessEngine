@@ -1,5 +1,6 @@
 package src.chess.move;
 
+import src.chess.Board.ActiveBoard;
 import src.chess.Board.Board;
 import src.chess.piece.Pawn;
 import src.chess.piece.Piece;
@@ -13,8 +14,8 @@ public class Promotion extends Move {
     private Piece upgradePiece;
     private Pawn movingPiece;
 
-    public Promotion(Piece movingPiece, Board board, Position endPos, Piece upgradePiece) {
-        super(movingPiece, board, endPos);
+    public Promotion(Piece movingPiece, ActiveBoard activeBoard, Position endPos, Piece upgradePiece) {
+        super(movingPiece, activeBoard, endPos);
         this.upgradePiece = upgradePiece;
         this.movingPiece = (Pawn)movingPiece;
     }

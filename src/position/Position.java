@@ -13,8 +13,8 @@ import src.chess.Board.Board;
  */
 public class Position {
 
-    private int row;
-    private int column;
+    private final int row;
+    private final int column;
 
     /**
      * Constructor for a position object
@@ -51,7 +51,7 @@ public class Position {
      * @return Returns a new Position object
      */
     public Position getPositionWithOffset() {
-        return new Position(this.row, this.column);
+        return this;
     }
 
     /**
@@ -75,9 +75,7 @@ public class Position {
     public boolean equals(Object o) {
         if(o instanceof Position) {
             Position temp = (Position)o;
-            if(temp.getRow() == this.getRow() && temp.getCol() == this.getCol()) {
-                return true;
-            }
+            return temp.getRow() == this.getRow() && temp.getCol() == this.getCol();
         }
         return false;
     }

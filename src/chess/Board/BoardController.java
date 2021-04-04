@@ -13,7 +13,7 @@ import java.util.Stack;
 public class BoardController {
     public static final String TITLE = "Chess";
 
-    private Board board;
+    private ActiveBoard activeBoard;
     private Stack<Move> pastMoves;
 
     private Status status;
@@ -26,6 +26,20 @@ public class BoardController {
 
     public boolean isDown = false;
 
+    public BoardController(ActiveBoard activeBoard, Player white, Player black){
+        this.activeBoard = activeBoard;
+        pastMoves = new Stack<>();
+
+        black.setBoardController(this);
+        white.setBoardController(this);
+        black.setActiveBoard(activeBoard);
+        white.setActiveBoard(activeBoard);
+
+        this.black = black;
+        this.white = white;
+        this.isWhiteTurn = false;
+    }
+
     /**
      * construct a {@code BoardController} object with board's information taken from a file
      * @param filePath path to file contains the information of board
@@ -33,13 +47,13 @@ public class BoardController {
      * @param black black player
      */
     public BoardController(String filePath, Player white, Player black) {
-        board = Board.setupFromFile(new File(filePath), this);
+        activeBoard = Board.setupFromFile(new File(filePath), this);
         pastMoves = new Stack<>();
 
         black.setBoardController(this);
         white.setBoardController(this);
-        black.setBoard(board);
-        white.setBoard(board);
+        black.setActiveBoard(activeBoard);
+        white.setActiveBoard(activeBoard);
 
         this.black = black;
         this.white = white;
@@ -61,7 +75,7 @@ public class BoardController {
             black.stop();
         });
 
-        Scene scene = new Scene(board.getGUI());
+        Scene scene = new Scene(activeBoard.getGUI());
 
 
         window.setScene(scene);
@@ -82,16 +96,16 @@ public class BoardController {
         }
         pastMoves.push(move);
         move.doMove(true);
-        board.clearHighlights();
-        if(board.checkForCheck(!isWhiteTurn)) {
-            if(board.checkForCheckMate(!isWhiteTurn)) {
+        activeBoard.clearHighlights();
+        if(activeBoard.checkForCheck(!isWhiteTurn)) {
+            if(activeBoard.checkForCheckMate(!isWhiteTurn)) {
                 //TODO setup restart game when someone wins
                 System.out.printf("%s has won the game!%n", isWhiteTurn ? "White" : "Black");
                 status = Status.FREEZE;
                 return;
             }
         } else {
-            if(board.checkForStaleMate(!isWhiteTurn)) {
+            if(activeBoard.checkForStaleMate(!isWhiteTurn)) {
                 System.out.printf("Stalemate!!%n");
                 status = Status.FREEZE;
                 return;

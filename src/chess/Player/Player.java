@@ -1,5 +1,6 @@
 package src.chess.Player;
 
+import src.chess.Board.ActiveBoard;
 import src.chess.Board.Board;
 import src.chess.Board.BoardController;
 import src.chess.move.Move;
@@ -9,7 +10,7 @@ public abstract class Player {
     public static final String[] PLAYER_TYPES = {"Human", "Computer"};
 
     protected boolean isWhite;
-    protected Board board;
+    protected ActiveBoard activeBoard;
 
     private BoardController boardController;
 
@@ -21,8 +22,8 @@ public abstract class Player {
         this.boardController = boardController;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
+    public void setActiveBoard(ActiveBoard activeBoard) {
+        this.activeBoard = activeBoard;
     }
 
     public void returnMove(Move move) {

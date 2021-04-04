@@ -22,17 +22,17 @@ public class HumanPlayer extends Player {
     public void calculateNextMove() {}
 
     public void forwardBoardInput(Position position) {
-        board.clearHighlights();
+        activeBoard.clearHighlights();
         if(highlightedPiece == null) {
-            Piece piece = board.getPiece(position);
+            Piece piece = activeBoard.getPiece(position);
             if(piece != null && piece.isWhite() == isWhite) {
-                board.highlight(position);
+                activeBoard.highlight(position);
                 highlightedPiece = piece;
                 LinkedList<Move> moves = piece.getValidMoves();
                 positionMap = Piece.getMoveMap(moves);
                 if(Settings.showMoves) {
                     for (Move move : moves) {
-                        board.highlight(move.getEndPosition());
+                        activeBoard.highlight(move.getEndPosition());
                     }
                 }
             }
@@ -54,7 +54,7 @@ public class HumanPlayer extends Player {
                     forwardBoardInput(position);
                 }
             } else {
-                board.highlight(position);
+                activeBoard.highlight(position);
             }
         }
     }

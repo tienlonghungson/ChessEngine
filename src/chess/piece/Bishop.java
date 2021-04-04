@@ -10,35 +10,29 @@ public class Bishop extends Piece {
     public static final int SCORE = 3;
     public static final String ID = "B";
     public static final String NAME = "Bishop";
+    private static final int[][] moveDirections = {{1,1},{-1,1},{-1,-1},{1,-1}};
 
     public Bishop (Position position, boolean isWhite, Board board) {
         super(position, isWhite, board);
     }
 
-    @Override
-    public LinkedList<Move> getMoves() {
-        LinkedList<Move> moves = new LinkedList<>();
-
-        getMovesHelper(1, 1, moves, board);
-        getMovesHelper(-1, 1, moves, board);
-        getMovesHelper(-1, -1, moves, board);
-        getMovesHelper(1, -1, moves, board);
-
-        return moves;
-    }
-
-    private void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves, Board board) {
+    protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves) {
         Position temp = this.position.getPositionWithOffset(rowInc, colInc);
-        while(board.isInBounds(temp)) {
-            if(board.hasFriendlyPieceAtPosition(temp, isWhite)) {
+        while(activeBoard.isInBounds(temp)) {
+            if(activeBoard.hasFriendlyPieceAtPosition(temp, isWhite)) {
                 break;
-            } else if(board.hasHostilePieceAtPosition(temp, isWhite)) {
-                moves.add(new Move(this, board, temp.getPositionWithOffset()));
+            } else if(activeBoard.hasHostilePieceAtPosition(temp, isWhite)) {
+                moves.add(new Move(this, activeBoard, temp.getPositionWithOffset()));
                 break;
             }
-            moves.add(new Move(this, board, temp.getPositionWithOffset()));
+            moves.add(new Move(this, activeBoard, temp.getPositionWithOffset()));
             temp = temp.getPositionWithOffset(rowInc, colInc);
         }
+    }
+
+    @Override
+    protected int[][] moveDirections() {
+        return moveDirections;
     }
 
     @Override

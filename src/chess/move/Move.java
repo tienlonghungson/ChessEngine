@@ -1,7 +1,6 @@
 package src.chess.move;
 
-import src.chess.Board.Board;
-//import src.chess.piece.*;
+import src.chess.Board.ActiveBoard;
 import src.position.Position;
 import src.chess.piece.Knight;
 import src.chess.piece.Pawn;
@@ -18,22 +17,22 @@ public class Move implements Comparable<Move> {
     private Position startPos;
     private Position endPos;
     private Piece capturedPiece;
-    protected Board board;
+    protected ActiveBoard activeBoard;
 
     /**
      * Constructor for the move class
      * Constructor automatically gets the captured piece if there is one
      *
      * @param movingPiece The piece that is going to be moved
-     * @param board The board to be changed
+     * @param boardActions The board to be changed
      * @param endPos The end Position of the moving piece
      */
-    public Move(Piece movingPiece, Board board, Position endPos) {
+    public Move(Piece movingPiece, ActiveBoard boardActions, Position endPos) {
         this.movingPiece = movingPiece;
         this.startPos = movingPiece.getNewPosition();
         this.endPos = endPos;
-        this.board = board;
-        this.capturedPiece = board.getPiece(endPos);
+        this.activeBoard = boardActions;
+        this.capturedPiece = boardActions.getPiece(endPos);
     }
 
     /**
@@ -43,9 +42,9 @@ public class Move implements Comparable<Move> {
      */
     public void doMove(boolean isVisual) {
         if(capturedPiece != null) {
-            board.kill(capturedPiece, isVisual);
+            activeBoard.kill(capturedPiece, isVisual);
         }
-        board.updatePosition(movingPiece, endPos, isVisual);
+        activeBoard.updatePosition(movingPiece, endPos, isVisual);
     }
 
     /**
@@ -54,9 +53,9 @@ public class Move implements Comparable<Move> {
      * @param isVisual Whether or not the change should happen graphically
      */
     public void undoMove(boolean isVisual) {
-        board.updatePosition(movingPiece, startPos, isVisual);
+        activeBoard.updatePosition(movingPiece, startPos, isVisual);
         if(capturedPiece != null) {
-            board.revive(capturedPiece, isVisual);
+            activeBoard.revive(capturedPiece, isVisual);
         }
     }
 
@@ -131,9 +130,9 @@ public class Move implements Comparable<Move> {
         }
 
         //4
-        if(this.getMovingScore() == Rook.SCORE && board.openFile(this.getEndPosition())) {
+        if(this.getMovingScore() == Rook.SCORE && activeBoard.openFile(this.getEndPosition().getCol())) {
             return -1;
-        } else if(move.getMovingScore() == Rook.SCORE && board.openFile(move.getEndPosition())) {
+        } else if(move.getMovingScore() == Rook.SCORE && activeBoard.openFile(move.getEndPosition().getCol())) {
             return 1;
         }
 

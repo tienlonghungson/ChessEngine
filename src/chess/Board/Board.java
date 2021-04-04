@@ -16,7 +16,7 @@ import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
-public class Board {
+public class Board implements ActiveBoard {
     public static final int TILE_WIDTH = 64;
     public static final int ROWS = 8;
     public static final int COLUMNS = 8;
@@ -116,6 +116,13 @@ public class Board {
             }
         }
     }
+
+    /**
+     * get all possible moves of a player
+     *
+     * @param isWhite whether the player plays black or white
+     * @return list of possible moves of a player
+     */
     public LinkedList<Move> getAllMoves(boolean isWhite) {
         Piece[] pieces = isWhite ? whitePieces : blackPieces;
         LinkedList<Move> moves = new LinkedList<>();
@@ -127,6 +134,12 @@ public class Board {
         return moves;
     }
 
+    /**
+     * get all possible moves excluding castling of a player
+     *
+     * @param isWhite whether the player plays black or white
+     * @return list of possible moves excluding castling of a player
+     */
     private LinkedList<Move> getAllMovesNoCastle(boolean isWhite) {
         Piece[] pieces = isWhite ? whitePieces : blackPieces;
         LinkedList<Move> moves = new LinkedList<>();
@@ -142,6 +155,12 @@ public class Board {
         return moves;
     }
 
+    /**
+     * get all valid moves of one player
+     *
+     * @param isWhite whether the player plays black or white
+     * @return list of valid moves of one player
+     */
     public LinkedList<Move> getAllValidMoves(boolean isWhite) {
         LinkedList<Move> validMoves = new LinkedList<>();
 
@@ -154,6 +173,12 @@ public class Board {
         return validMoves;
     }
 
+    /**
+     * get the king
+     *
+     * @param isWhite whether the King is black or white
+     * @return King {@code Piece}
+     */
     public Piece getKing(boolean isWhite) {
         Piece[] pieces = isWhite ? whitePieces : blackPieces;
         for (Piece piece: pieces) {
@@ -173,21 +198,45 @@ public class Board {
         return false;
     }
 
+    /**
+     * check if the King can make any moves
+     *
+     * @param isWhite whether the king is black or white
+     * @return {@code true} if the king can move, {@code false} otherwise
+     */
     public boolean checkIfKingCanMove(boolean isWhite) {
         return getKing(isWhite).getValidMoves().size() != 0;
     }
 
+    /**
+     * check if a player came to a stalemate
+     *
+     * @param isWhite whether the player plays black or white
+     * @return {@code true} if this player can no longer make any moves, {@code false} otherwise
+     */
     public boolean checkForStaleMate(boolean isWhite) {
         return !checkIfKingCanMove(isWhite) && getAllValidMoves(isWhite).size() == 0;
     }
 
+    /**
+     * check if a player is checkmate
+     *
+     * @param isWhite whether the player plays black or white
+     * @return {@code true} if this player is checkmate, {@code false} otherwise
+     */
     public boolean checkForCheckMate(boolean isWhite) {
         return !isSafeMove(getKing(isWhite).getPosition(), isWhite) && getAllValidMoves(isWhite).size() == 0;
     }
 
-    public boolean openFile(Position position) {
+    /**
+     * check if the file is open
+     *
+     * @param col the file which is checked
+     * @return {@code true} if the file is open, {@code false} otherwise
+     */
+    public boolean openFile(int col) {
         for (int i = 0; i < Board.ROWS; i++) {
-            Piece p = getPiece(new Position(i, position.getCol()));
+            Piece p = getPiece(new Position(i, col));
             if (p instanceof Pawn) {
                 return false;
             }
@@ -195,6 +244,10 @@ public class Board {
         return true;
     }
 
+    /**
+     * calculate score in this board
+     * @return total score in board
+     */
     public int score() {
         int score = 0;
         for (Piece piece: whitePieces) {
@@ -257,7 +310,7 @@ public class Board {
     }
 
     /**
-     * Removes the piece from the board array and sets the pieces' isDead value to true
+     * Removes the piece from the board array and sets the piece's isDead value to true
      *
      * @param piece which is dead
      * @param isVisual whether the move is visible

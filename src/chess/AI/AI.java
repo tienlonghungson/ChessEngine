@@ -1,6 +1,6 @@
 package src.chess.AI;
 
-import src.chess.Board.Board;
+import src.chess.Board.ActiveBoard;
 import src.chess.move.Move;
 
 import java.util.Collections;
@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 public class AI implements Runnable {
     private static final boolean VISUAL_CALCULATIONS = false;
 
-    private Board board;
+    private ActiveBoard activeBoard;
     private boolean isWhite;
     private AISettings settings;
     private int stateCounter = 0;
@@ -28,12 +28,12 @@ public class AI implements Runnable {
         stopCalculating = false;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
+    public void setActiveBoard(ActiveBoard activeBoard) {
+        this.activeBoard = activeBoard;
     }
 
     public LinkedList<Move> calculateBestMove(int depth) {
-        LinkedList<Move> moves = board.getAllValidMoves(isWhite);
+        LinkedList<Move> moves = activeBoard.getAllValidMoves(isWhite);
 
         LinkedList<Move> bestMoves = new LinkedList<>();
         int bestScore;
@@ -46,9 +46,9 @@ public class AI implements Runnable {
             for (Move move: moves) {
                 move.doMove(VISUAL_CALCULATIONS);
                 int tempScore;
-                if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && board.checkForStaleMate(!isWhite)) {
+                if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForStaleMate(!isWhite)) {
                     tempScore = 0;
-                } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && board.checkForCheckMate(!isWhite)) {
+                } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForCheckMate(!isWhite)) {
                     tempScore = Integer.MAX_VALUE;
                 } else {
                     tempScore = getBestMoveHelper(false, alpha, beta, depth);
@@ -74,9 +74,9 @@ public class AI implements Runnable {
             for (Move move: moves) {
                 move.doMove(VISUAL_CALCULATIONS);
                 int tempScore;
-                if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && board.checkForStaleMate(!isWhite)) {
+                if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForStaleMate(!isWhite)) {
                     tempScore = 0;
-                } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && board.checkForCheckMate(!isWhite)) {
+                } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForCheckMate(!isWhite)) {
                     tempScore = Integer.MIN_VALUE;
                 } else {
                     tempScore = getBestMoveHelper(true, alpha, beta, depth);
@@ -111,17 +111,17 @@ public class AI implements Runnable {
         }
         if(depth == 0) {
             stateCounter++;
-            return board.score();
+            return activeBoard.score();
         }
-        LinkedList<Move> moves = board.getAllMoves(isWhiteTurn);
+        LinkedList<Move> moves = activeBoard.getAllMoves(isWhiteTurn);
         int bestScore;
         if(isWhiteTurn) {
             bestScore = Integer.MIN_VALUE;
             for (Move move: moves) {
                 move.doMove(VISUAL_CALCULATIONS);
-                if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && board.checkForStaleMate(!isWhite)) {
+                if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForStaleMate(!isWhite)) {
                     bestScore = Integer.max(bestScore, 0);
-                } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && board.checkForCheckMate(!isWhite)) {
+                } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForCheckMate(!isWhite)) {
                     bestScore = Integer.MAX_VALUE;
                 } else {
                     bestScore = Integer.max(bestScore, getBestMoveHelper(false, alpha, beta, depth - 1));
@@ -137,9 +137,9 @@ public class AI implements Runnable {
             bestScore = Integer.MAX_VALUE;
             for (Move move: moves) {
                 move.doMove(VISUAL_CALCULATIONS);
-                if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && board.checkForStaleMate(!isWhite)) {
+                if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForStaleMate(!isWhite)) {
                     bestScore = Integer.min(bestScore, 0);
-                } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && board.checkForCheckMate(!isWhite)) {
+                } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForCheckMate(!isWhite)) {
                     bestScore = Integer.MIN_VALUE;
                 } else {
                     bestScore = Integer.min(bestScore, getBestMoveHelper(true, alpha, beta, depth - 1));
@@ -191,10 +191,10 @@ public class AI implements Runnable {
         if(settings.moveOrdering) {
             Collections.sort(bestMoves);
             System.out.println(getName() + "'s best moves: " + bestMoves);
-            board.giveBestMove(bestMoves.getFirst());
+            activeBoard.giveBestMove(bestMoves.getFirst());
         } else {
             Move move = bestMoves.get((int) (Math.random() * bestMoves.size()));
-            board.giveBestMove(move);
+            activeBoard.giveBestMove(move);
         }
     }
 

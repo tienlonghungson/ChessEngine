@@ -30,6 +30,9 @@ public class Pawn extends Piece implements FirstMoveMatters {
         this.hasMoved = hasMoved;
     }
 
+    /**
+     * @return list of {@code moves} which is valid
+     */
     @Override
     public LinkedList<Move> getMoves() {
         LinkedList<Move> moves = new LinkedList<>();
@@ -45,25 +48,25 @@ public class Pawn extends Piece implements FirstMoveMatters {
 
             //Forward one
             temp = this.position.getPositionWithOffset(forward(1), 0);
-            if (board.isInBounds(temp) && !board.hasPieceAtPosition(temp)) {
+            if (activeBoard.isInBounds(temp) && !activeBoard.hasPieceAtPosition(temp)) {
                 moves.addAll(setupMove(temp.getPositionWithOffset()));
                 //Forward two
                 if (!hasMoved) {
                     temp = this.position.getPositionWithOffset(forward(2), 0);
-                    if (board.isInBounds(temp) && !board.hasPieceAtPosition(temp)) {
+                    if (activeBoard.isInBounds(temp) && !activeBoard.hasPieceAtPosition(temp)) {
                         moves.addAll(setupMove(temp.getPositionWithOffset()));
                     }
                 }
             }
             //Capture right
             temp = this.position.getPositionWithOffset(forward(1), 1);
-            if (board.isInBounds(temp) && board.hasHostilePieceAtPosition(temp, isWhite)) {
+            if (activeBoard.isInBounds(temp) && activeBoard.hasHostilePieceAtPosition(temp, isWhite)) {
                 moves.addAll(setupMove(temp.getPositionWithOffset()));
             }
 
             //Capture left
             temp = this.position.getPositionWithOffset(forward(1), -1);
-            if (board.isInBounds(temp) && board.hasHostilePieceAtPosition(temp, isWhite)) {
+            if (activeBoard.isInBounds(temp) && activeBoard.hasHostilePieceAtPosition(temp, isWhite)) {
                 moves.addAll(setupMove(temp.getPositionWithOffset()));
             }
 
@@ -73,15 +76,23 @@ public class Pawn extends Piece implements FirstMoveMatters {
         return moves;
     }
 
+    @Override
+    protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves) {}
+
+    @Override
+    protected int[][] moveDirections() {
+        return null;
+    }
+
     private LinkedList<Move> setupMove(Position position) {
         LinkedList<Move> moves = new LinkedList<>();
         if(!hasMoved) { // if the first move has been executed
-            moves.add(new FirstMove(this, board, position));
+            moves.add(new FirstMove(this, activeBoard, position));
         } else if (position.getRow() == (isWhite ? 0: Board.ROWS - 1)) { // if PawnUpgradeMove has been executed
-            moves.add(new Promotion(this, board, position, new Queen(position, isWhite, board)));
-            moves.add(new Promotion(this, board, position, new Knight(position, isWhite, board)));
+            moves.add(new Promotion(this, activeBoard, position, new Queen(position, isWhite, activeBoard)));
+            moves.add(new Promotion(this, activeBoard, position, new Knight(position, isWhite, activeBoard)));
         } else {
-            moves.add(new Move(this, board, position));
+            moves.add(new Move(this, activeBoard, position));
         }
         return moves;
     }
