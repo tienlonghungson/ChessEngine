@@ -1,7 +1,5 @@
 package src.chess;
 
-import src.chess.Board.ActiveBoard;
-import src.chess.Board.Board;
 import src.chess.Board.BoardController;
 import src.chess.Player.Player;
 import javafx.application.Application;
@@ -20,7 +18,7 @@ import java.io.File;
 public class Launcher extends Application {
     public BoardController b;
     private Stage launcherWindow;
-    public static File filePath = new File((new File("")).getAbsolutePath() + "/Chess");
+    public static File filePath = new File((new File("")).getAbsolutePath() + "/Resources");
 
     private Player blackPlayer;
     private Player whitePlayer;

@@ -82,12 +82,12 @@ public class Board implements ActiveBoard {
 
         //Pieces
         for (Piece whitePiece: whitePieces) {
-            whitePiece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/Chess_Pieces");
+            whitePiece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/ChessPieceImages");
             root.getChildren().add(whitePiece);
         }
 
         for (Piece blackPiece: blackPieces) {
-            blackPiece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/Chess_Pieces");
+            blackPiece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/ChessPieceImages");
             root.getChildren().add(blackPiece);
         }
         return root;
@@ -101,14 +101,25 @@ public class Board implements ActiveBoard {
         controller.giveNextMove(move);
     }
 
+    /**
+     * turn on highlight at a specific position
+     * @param position where highlight is turned on
+     */
     public void highlight(Position position) {
         grid[position.getRow()][position.getCol()].highLight();
     }
 
+    /**
+     * turn on warning at a specific position
+     * @param position where warning is turned on
+     */
     public void warn(Position position) {
         grid[position.getRow()][position.getCol()].warn();
     }
 
+    /**
+     * disable highlight and warning
+     */
     public void clearHighlights() {
         for (Tile[] tiles : grid) {
             for (Tile tile : tiles) {
@@ -189,6 +200,11 @@ public class Board implements ActiveBoard {
         return null;
     }
 
+    /**
+     * check if the king of one player is under attack
+     * @param isWhite whether the player play white or black
+     * @return {@code true} if the king is under attack, {@code false} otherwise
+     */
     public boolean checkForCheck(boolean isWhite) {
         Piece king = getKing(isWhite);
         if(!isSafeMove(king.getPosition(), isWhite)) {

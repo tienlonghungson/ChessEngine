@@ -5,6 +5,9 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
+/**
+ * this class specified how the board and pieces should be displayed
+ */
 public class Tile extends StackPane {
     public static final int HIGHLIGHT_WIDTH = 8;
     public static final Color HIGHLIGHT_COLOR = Color.YELLOWGREEN;
@@ -55,16 +58,25 @@ public class Tile extends StackPane {
         setOnMouseClicked(e -> board.clickedSquare(position));
     }
 
+    /**
+     * allow highlight
+     */
     protected void highLight() {
         highlight.setVisible(true);
         highlightCover.setVisible(true);
     }
 
+    /**
+     * allow warning
+     */
     protected void warn() {
         warning.setVisible(true);
         highlightCover.setVisible(true);
     }
 
+    /**
+     * make highlight, warning, highlightCover become invisible
+     */
     protected void clear() {
         highlight.setVisible(false);
         warning.setVisible(false);

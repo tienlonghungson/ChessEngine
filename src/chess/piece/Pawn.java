@@ -147,7 +147,7 @@ public class Pawn extends Piece implements FirstMoveMatters {
         this.upgradePiece = piece;
         if(isVisual) {
             oldImage = getImage();
-            piece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/Chess_Pieces");
+            piece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/ChessPieceImages");
             setImage(piece.getImage());
             piece.setVisible(false);
         }

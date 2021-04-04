@@ -11,7 +11,7 @@ import java.io.File;
 import java.util.Stack;
 
 public class BoardController {
-    public static final String TITLE = "Chess";
+    public static final String TITLE = "Resources";
 
     private ActiveBoard activeBoard;
     private Stack<Move> pastMoves;
