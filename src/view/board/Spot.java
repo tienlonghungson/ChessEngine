@@ -1,6 +1,5 @@
 package src.view.board;
 
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -12,22 +11,18 @@ public class Spot extends StackPane {
     public final Color WHITE_COLOR = Color.WHITE;
     public final Color BLACK_COLOR = Color.DARKGRAY;
 
-    private boolean isWhite;
-//    private ActiveBoardView activeBoardView;
-
-    private Rectangle square;
-    private Rectangle highlight;
-    private Rectangle warning;
-    private Rectangle highlightCover;
+    private final Rectangle highlight;
+    private final Rectangle warning;
+    private final Rectangle highlightCover;
 
     public Spot(int row, int column) {
 
         setTranslateX(column * ActiveBoardView.SPOT_WIDTH);
         setTranslateY(row * ActiveBoardView.SPOT_WIDTH);
 
-        isWhite = (row + column) % 2 == 0;
+        boolean isWhite = (row + column) % 2 == 0;
 
-        square = new Rectangle(ActiveBoardView.SPOT_WIDTH, ActiveBoardView.SPOT_WIDTH);
+        Rectangle square = new Rectangle(ActiveBoardView.SPOT_WIDTH, ActiveBoardView.SPOT_WIDTH);
         highlight = new Rectangle(ActiveBoardView.SPOT_WIDTH, ActiveBoardView.SPOT_WIDTH);
         warning = new Rectangle(ActiveBoardView.SPOT_WIDTH, ActiveBoardView.SPOT_WIDTH);
         highlightCover = new Rectangle(ActiveBoardView.SPOT_WIDTH - HIGHLIGHT_WIDTH, ActiveBoardView.SPOT_WIDTH - HIGHLIGHT_WIDTH);
@@ -49,10 +44,6 @@ public class Spot extends StackPane {
         getChildren().add(warning);
         getChildren().add(highlightCover);
     }
-
-//    public Position getPosition() {
-//        return position;
-//    }
 
     /**
      * allow highlight
