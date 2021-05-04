@@ -21,20 +21,25 @@ public class Rook extends Piece implements FirstMoveMatters {
     }
 
     public Rook(Position position, boolean isWhite, boolean hasMoved, ActiveBoard activeBoard) {
-        super(position, isWhite, activeBoard);
+        super(position, isWhite);
         this.hasMoved = hasMoved;
     }
 
-    protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves) {
+    public Rook(Position position, boolean isWhite, boolean hasMoved) {
+        super(position, isWhite);
+        this.hasMoved = hasMoved;
+    }
+
+    protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves, ActiveBoard activeBoard) {
         Position temp = this.position.getPositionWithOffset(rowInc, colInc);
         while(activeBoard.isInBounds(temp)) {
             if(activeBoard.hasFriendlyPieceAtPosition(temp, isWhite)) {
                 break;
             } else if (activeBoard.hasHostilePieceAtPosition(temp, isWhite)) {
-                moves.add(setupMove(temp.getPositionWithOffset()));
+                moves.add(setupMove(temp.getPositionWithOffset(),activeBoard));
                 break;
             }
-            moves.add(setupMove(temp.getPositionWithOffset()));
+            moves.add(setupMove(temp.getPositionWithOffset(), activeBoard));
             temp = temp.getPositionWithOffset(rowInc, colInc);
         }
     }
@@ -42,9 +47,10 @@ public class Rook extends Piece implements FirstMoveMatters {
     /**
      * set up the move to the position
      * @param position end position of the move
+     * @param activeBoard
      * @return FirstMove object if this is the first move, Move otherwise
      */
-    private Move setupMove(Position position) {
+    private Move setupMove(Position position, ActiveBoard activeBoard) {
         if(hasMoved) {
             return new Move(this, activeBoard, position);
         } else {
@@ -88,5 +94,13 @@ public class Rook extends Piece implements FirstMoveMatters {
         boolean hasMoved = Boolean.parseBoolean(data[4]);
 
         return new Rook(position, isWhite, hasMoved, board);
+    }
+
+    public static Rook parseRook(String[] data) {
+        Position position = Position.parsePosition(data[1] + data[2]);
+        boolean isWhite = Boolean.parseBoolean(data[3]);
+        boolean hasMoved = Boolean.parseBoolean(data[4]);
+
+        return new Rook(position, isWhite, hasMoved);
     }
 }

@@ -20,6 +20,7 @@ public class AI implements Runnable {
 
     private boolean stopCalculating;
     private int iterativeDeepeningDepth;
+
     ScheduledExecutorService timer;
 
     public AI(boolean isWhite, AISettings settings) {
@@ -192,7 +193,13 @@ public class AI implements Runnable {
             Collections.sort(bestMoves);
             System.out.println(getName() + "'s best moves: " + bestMoves);
             activeBoard.giveBestMove(bestMoves.getFirst());
+//            beingCalculatedMove = bestMoves.getFirst();
+//            System.out.println("1Cal "+bestMoves.getFirst().toString());
+//            System.out.println("1Get "+ beingCalculatedMove.toString());
         } else {
+//            beingCalculatedMove = bestMoves.get((int) (Math.random() * bestMoves.size()));
+//            System.out.println("2Cal "+ bestMoves.get((int) (Math.random() * bestMoves.size())).toString());
+//            System.out.println("2Get "+ beingCalculatedMove.toString());
             Move move = bestMoves.get((int) (Math.random() * bestMoves.size()));
             activeBoard.giveBestMove(move);
         }

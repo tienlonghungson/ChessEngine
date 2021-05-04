@@ -1,44 +1,48 @@
 package src.chess.piece;
 
-import src.chess.Board.Board;
 import src.chess.Board.ActiveBoard;
+import src.chess.Board.Board;
+import src.chess.Launcher;
 import src.chess.move.Move;
 import src.position.Position;
 import src.position.PositionMap;
-import javafx.animation.TranslateTransition;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.util.Duration;
+import src.view.piece.PieceView;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.util.LinkedList;
 
-public abstract class Piece extends ImageView {
+public abstract class Piece{
     public static final long TRANSITION_TIME = 400; //400
 
     protected boolean isWhite;
     protected boolean isDead;
     protected Position position;
-    protected ActiveBoard activeBoard;
+//    protected ActiveBoard activeBoard;
+    protected PieceView pieceView;
 
-    public Piece(Position position, boolean isWhite, ActiveBoard boardActions) {
+    public Piece(Position position, boolean isWhite) {
         this.position = position;
         this.isWhite = isWhite;
-        this.activeBoard = boardActions;
+//        this.activeBoard = boardActions;
         this.isDead = false;
+        pieceView = new PieceView();
+        pieceView.setupIcon(Launcher.filePath.getAbsolutePath() + "/ChessPieceImages",this);
+    }
+
+    public PieceView getPieceView() {
+        return pieceView;
     }
 
     /**
      *
      * @return the list of possible moves (including valid moves and moves can cause the king to be unsafe)
+     * @param activeBoard
      */
-    public LinkedList<Move> getMoves(){
+    public LinkedList<Move> getMoves(ActiveBoard activeBoard){
         LinkedList<Move> moves = new LinkedList<>();
         final int[][] moveDirections = moveDirections();
         for (int[] direction:
              moveDirections) {
-            getMovesHelper(direction[0],direction[1],moves);
+            getMovesHelper(direction[0],direction[1],moves,activeBoard );
         }
         return moves;
     }
@@ -48,8 +52,9 @@ public abstract class Piece extends ImageView {
      * @param rowInc x coordinate of direction
      * @param colInc y coordinate of direction
      * @param moves contains the moves if they are valid
+     * @param activeBoard
      */
-    protected abstract void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves);
+    protected abstract void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves, ActiveBoard activeBoard);
 
     /**
      *
@@ -60,10 +65,11 @@ public abstract class Piece extends ImageView {
     /**
      * valid moves are list of possible moves excluding moves cause the king to be unsafe
      * @return list of valid move
+     * @param activeBoard
      */
-    public LinkedList<Move> getValidMoves() {
+    public LinkedList<Move> getValidMoves(ActiveBoard activeBoard) {
         LinkedList<Move> validMoves = new LinkedList<>();
-        LinkedList<Move> allMoves = getMoves();
+        LinkedList<Move> allMoves = getMoves(activeBoard);
 
         Piece king = activeBoard.getKing(isWhite);
 
@@ -101,50 +107,27 @@ public abstract class Piece extends ImageView {
         return this.position;
     }
 
-    // Image View
+    // GUI evolve
     public void updatePosition(Position position, boolean isVisual) {
         this.position = position;
         if(isVisual) {
-            TranslateTransition tf = new TranslateTransition(Duration.millis(TRANSITION_TIME), this);
-            tf.setToX(position.getCol() * Board.TILE_WIDTH);
-            tf.setToY(position.getRow() * Board.TILE_WIDTH);
-            tf.play();
+            pieceView.updatePosition(position);
         }
     }
 
-    // Image View
+    // GUI evolve
     public void kill(boolean isVisual) {
         this.isDead = true;
         if(isVisual) {
-            setVisible(false);
+            pieceView.kill();
         }
     }
 
-    // Image View
+    // GUI evolve
     public void revive(boolean isVisual) {
         this.isDead = false;
         if(isVisual) {
-            setVisible(true);
-        }
-    }
-
-    // Image View
-    public void setupIcon(String filePath) {
-        filePath += isWhite() ? "/White_" : "/Black_";
-        filePath += getName() + ".png";
-
-        try {
-            Image image = new Image(new FileInputStream(filePath));
-            setImage(image);
-            setFitHeight(Board.TILE_WIDTH);
-            setFitWidth(Board.TILE_WIDTH);
-            setPreserveRatio(true);
-
-            setTranslateX(position.getCol() * Board.TILE_WIDTH);
-            setTranslateY(position.getRow() * Board.TILE_WIDTH);
-            setOnMouseClicked(e -> activeBoard.clickedSquare(position));
-        } catch(FileNotFoundException e) {
-            System.err.printf("NO SUCH FILE \"%s\"%n", filePath);
+            pieceView.revive();
         }
     }
 
@@ -164,6 +147,22 @@ public abstract class Piece extends ImageView {
             case "B" -> Bishop.parseBishop(data, board);
             case "Q" -> Queen.parseQueen(data, board);
             case "K" -> King.parseKing(data, board);
+            default -> null;
+        };
+
+    }
+
+    public static Piece parsePiece(String rawData) {
+        rawData = rawData.substring(1);
+        String[] data = rawData.split("[\\W]+");
+
+        return switch (data[0]) {
+            case "P" -> Pawn.parsePawn(data);
+            case "R" -> Rook.parseRook(data);
+            case "Kn" -> Knight.parseKnight(data);
+            case "B" -> Bishop.parseBishop(data);
+            case "Q" -> Queen.parseQueen(data);
+            case "K" -> King.parseKing(data);
             default -> null;
         };
 

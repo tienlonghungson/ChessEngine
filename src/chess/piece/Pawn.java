@@ -1,6 +1,7 @@
 package src.chess.piece;
 
 //import com.sun.org.apache.xpath.internal.operations.Bool;
+import src.chess.Board.ActiveBoard;
 import src.chess.Board.Board;
 import src.chess.Launcher;
 import src.chess.move.FirstMove;
@@ -26,20 +27,26 @@ public class Pawn extends Piece implements FirstMoveMatters {
     }
 
     public Pawn(Position position, boolean isWhite, boolean hasMoved, Board board) {
-        super(position, isWhite, board);
+        super(position, isWhite);
+        this.hasMoved = hasMoved;
+    }
+
+    public Pawn(Position position, boolean isWhite, boolean hasMoved) {
+        super(position, isWhite);
         this.hasMoved = hasMoved;
     }
 
     /**
      * @return list of {@code moves} which is valid
+     * @param activeBoard
      */
     @Override
-    public LinkedList<Move> getMoves() {
+    public LinkedList<Move> getMoves(ActiveBoard activeBoard) {
         LinkedList<Move> moves = new LinkedList<>();
 
         // if this pawn has been upgraded
         if(upgradePiece != null) {
-            moves.addAll(upgradePiece.getMoves());
+            moves.addAll(upgradePiece.getMoves(activeBoard));
             for (Move m: moves) {
                 m.setMovingPiece(this);
             }
@@ -49,25 +56,25 @@ public class Pawn extends Piece implements FirstMoveMatters {
             //Forward one
             temp = this.position.getPositionWithOffset(forward(1), 0);
             if (activeBoard.isInBounds(temp) && !activeBoard.hasPieceAtPosition(temp)) {
-                moves.addAll(setupMove(temp.getPositionWithOffset()));
+                moves.addAll(setupMove(temp.getPositionWithOffset(),activeBoard));
                 //Forward two
                 if (!hasMoved) {
                     temp = this.position.getPositionWithOffset(forward(2), 0);
                     if (activeBoard.isInBounds(temp) && !activeBoard.hasPieceAtPosition(temp)) {
-                        moves.addAll(setupMove(temp.getPositionWithOffset()));
+                        moves.addAll(setupMove(temp.getPositionWithOffset(),activeBoard));
                     }
                 }
             }
             //Capture right
             temp = this.position.getPositionWithOffset(forward(1), 1);
             if (activeBoard.isInBounds(temp) && activeBoard.hasHostilePieceAtPosition(temp, isWhite)) {
-                moves.addAll(setupMove(temp.getPositionWithOffset()));
+                moves.addAll(setupMove(temp.getPositionWithOffset(),activeBoard));
             }
 
             //Capture left
             temp = this.position.getPositionWithOffset(forward(1), -1);
             if (activeBoard.isInBounds(temp) && activeBoard.hasHostilePieceAtPosition(temp, isWhite)) {
-                moves.addAll(setupMove(temp.getPositionWithOffset()));
+                moves.addAll(setupMove(temp.getPositionWithOffset(),activeBoard));
             }
 
             //TODO Setup en passant
@@ -77,14 +84,14 @@ public class Pawn extends Piece implements FirstMoveMatters {
     }
 
     @Override
-    protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves) {}
+    protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves, ActiveBoard activeBoard) {}
 
     @Override
     protected int[][] moveDirections() {
         return null;
     }
 
-    private LinkedList<Move> setupMove(Position position) {
+    private LinkedList<Move> setupMove(Position position, ActiveBoard activeBoard) {
         LinkedList<Move> moves = new LinkedList<>();
         if(!hasMoved) { // if the first move has been executed
             moves.add(new FirstMove(this, activeBoard, position));
@@ -146,17 +153,15 @@ public class Pawn extends Piece implements FirstMoveMatters {
     public void upgrade(Piece piece, boolean isVisual) {
         this.upgradePiece = piece;
         if(isVisual) {
-            oldImage = getImage();
-            piece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/ChessPieceImages");
-            setImage(piece.getImage());
-            piece.setVisible(false);
+            oldImage = pieceView.getImage();
+            pieceView.setupIcon(Launcher.filePath.getAbsolutePath() + "/ChessPieceImages",this);
         }
     }
 
     public void downgrade(boolean isVisual) {
         upgradePiece = null;
         if(isVisual) {
-            setImage(oldImage);
+            pieceView.setImage(oldImage);
             oldImage = null;
         }
     }
@@ -168,5 +173,14 @@ public class Pawn extends Piece implements FirstMoveMatters {
         //boolean hasJustMoved = Boolean.parseBoolean(data[5]);
 
         return new Pawn(position, isWhite, hasMoved, board);
+    }
+
+    public static Pawn parsePawn(String[] data) {
+        Position position = Position.parsePosition(data[1] + data[2]);
+        boolean isWhite = Boolean.parseBoolean(data[3]);
+        boolean hasMoved = Boolean.parseBoolean(data[4]);
+        //boolean hasJustMoved = Boolean.parseBoolean(data[5]);
+
+        return new Pawn(position, isWhite, hasMoved);
     }
 }

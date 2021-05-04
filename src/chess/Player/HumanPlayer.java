@@ -4,6 +4,7 @@ import src.chess.AI.Settings;
 import src.chess.move.Move;
 import src.chess.move.MoveConformationWindow;
 import src.chess.piece.Piece;
+import src.controller.BoardController;
 import src.position.Position;
 import src.position.PositionMap;
 
@@ -14,25 +15,26 @@ public class HumanPlayer extends Player {
     private Piece highlightedPiece;
     private PositionMap<Move> positionMap;
 
-    public HumanPlayer(boolean isWhite)
-    {
+    public HumanPlayer(boolean isWhite) {
         super(isWhite);
     }
 
-    public void calculateNextMove() {}
+    public void calculateNextMove(BoardController boardController) {}
 
     public void forwardBoardInput(Position position) {
-        activeBoard.clearHighlights();
+        // everytime we clicked a piece, highlight turns on
+        // so if we clicked a another piece, we need to turn off the highlight of the last piece
+        boardController.getActiveBoardView().clearHighlights();
         if(highlightedPiece == null) {
             Piece piece = activeBoard.getPiece(position);
             if(piece != null && piece.isWhite() == isWhite) {
-                activeBoard.highlight(position);
+                boardController.getActiveBoardView().highlight(position);
                 highlightedPiece = piece;
-                LinkedList<Move> moves = piece.getValidMoves();
+                LinkedList<Move> moves = piece.getValidMoves(activeBoard);
                 positionMap = Piece.getMoveMap(moves);
                 if(Settings.showMoves) {
                     for (Move move : moves) {
-                        activeBoard.highlight(move.getEndPosition());
+                        boardController.getActiveBoardView().highlight(move.getEndPosition());
                     }
                 }
             }
@@ -54,7 +56,7 @@ public class HumanPlayer extends Player {
                     forwardBoardInput(position);
                 }
             } else {
-                activeBoard.highlight(position);
+                boardController.getActiveBoardView().highlight(position);
             }
         }
     }

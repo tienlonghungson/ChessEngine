@@ -19,6 +19,14 @@ public class Move implements Comparable<Move> {
     private Piece capturedPiece;
     protected ActiveBoard activeBoard;
 
+    public Move(){
+//        this.activeBoard = boardActions;
+    }
+
+    public void setActiveBoard(ActiveBoard activeBoard) {
+        this.activeBoard = activeBoard;
+    }
+
     /**
      * Constructor for the move class
      * Constructor automatically gets the captured piece if there is one
@@ -91,12 +99,12 @@ public class Move implements Comparable<Move> {
      * @return A String representation of this Move object
      */
     public String toString() {
-        String moveDescription = movingPiece.getID() + " " + startPos.toString() + " -> ";
+        StringBuilder moveDescription = new StringBuilder(movingPiece.getID() + " " + startPos.toString() + " -> ");
         if(capturedPiece != null) {
-            moveDescription += capturedPiece.getID() + " ";
+            moveDescription.append(capturedPiece.getID() + " ");
         }
-        moveDescription += endPos.toString();
-        return moveDescription;
+        moveDescription.append(endPos.toString());
+        return moveDescription.toString();
     }
 
     public void setMovingPiece(Piece piece) {

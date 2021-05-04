@@ -15,10 +15,14 @@ public class Queen extends Piece {
     private static final int[][] moveDirections = {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1}};
 
     public Queen (Position position, boolean isWhite, ActiveBoard activeBoard) {
-        super(position, isWhite, activeBoard);
+        super(position, isWhite);
     }
 
-     protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves) {
+    public Queen (Position position, boolean isWhite) {
+        super(position, isWhite);
+    }
+
+     protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves, ActiveBoard activeBoard) {
         Position temp = this.position.getPositionWithOffset(rowInc, colInc);
         while(activeBoard.isInBounds(temp)) {
             if(activeBoard.hasFriendlyPieceAtPosition(temp, isWhite)) {
@@ -57,5 +61,12 @@ public class Queen extends Piece {
         boolean isWhite = Boolean.parseBoolean(data[3]);
 
         return new Queen(position, isWhite, board);
+    }
+
+    public static Queen parseQueen(String[] data) {
+        Position position = Position.parsePosition(data[1] + data[2]);
+        boolean isWhite = Boolean.parseBoolean(data[3]);
+
+        return new Queen(position, isWhite);
     }
 }

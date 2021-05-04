@@ -1,8 +1,7 @@
 package src.chess.Player;
 
 import src.chess.Board.ActiveBoard;
-import src.chess.Board.Board;
-import src.chess.Board.BoardController;
+import src.controller.BoardController;
 import src.chess.move.Move;
 import src.position.Position;
 
@@ -12,7 +11,7 @@ public abstract class Player {
     protected boolean isWhite;
     protected ActiveBoard activeBoard;
 
-    private BoardController boardController;
+    protected BoardController boardController;
 
     public Player(boolean isWhite) {
         this.isWhite = isWhite;
@@ -27,10 +26,10 @@ public abstract class Player {
     }
 
     public void returnMove(Move move) {
-        boardController.giveNextMove(move);
+        boardController.executeNextMove(move);
     }
 
-    public abstract void calculateNextMove();
+    public abstract void calculateNextMove(BoardController boardController);
     public abstract void forwardBoardInput(Position position);
     public abstract void stop();
     public abstract String toString();

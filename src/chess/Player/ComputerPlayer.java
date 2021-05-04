@@ -3,6 +3,8 @@ package src.chess.Player;
 import src.chess.AI.AI;
 import src.chess.AI.AISettings;
 import src.chess.Board.ActiveBoard;
+import src.chess.move.Move;
+import src.controller.BoardController;
 import src.position.Position;
 
 public class ComputerPlayer extends Player {
@@ -17,11 +19,13 @@ public class ComputerPlayer extends Player {
     public void setActiveBoard(ActiveBoard activeBoard) {
         super.setActiveBoard(activeBoard);
         ai.setActiveBoard(activeBoard);
+//        beingCalculatedMove.setActiveBoard(activeBoard);
     }
 
-    public void calculateNextMove() {
+    public void calculateNextMove(BoardController boardController) {
         System.out.println("Starting AI Thread");
         (new Thread(ai)).start();
+//        boardController.executeNextMove(beingCalculatedMove);
     }
 
     public void forwardBoardInput(Position position) {

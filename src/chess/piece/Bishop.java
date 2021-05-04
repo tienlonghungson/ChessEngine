@@ -1,5 +1,6 @@
 package src.chess.piece;
 
+import src.chess.Board.ActiveBoard;
 import src.chess.Board.Board;
 import src.chess.move.Move;
 import src.position.Position;
@@ -13,10 +14,14 @@ public class Bishop extends Piece {
     private static final int[][] moveDirections = {{1,1},{-1,1},{-1,-1},{1,-1}};
 
     public Bishop (Position position, boolean isWhite, Board board) {
-        super(position, isWhite, board);
+        super(position, isWhite);
     }
 
-    protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves) {
+    public Bishop (Position position, boolean isWhite) {
+        super(position, isWhite);
+    }
+
+    protected void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves, ActiveBoard activeBoard) {
         Position temp = this.position.getPositionWithOffset(rowInc, colInc);
         while(activeBoard.isInBounds(temp)) {
             if(activeBoard.hasFriendlyPieceAtPosition(temp, isWhite)) {
@@ -55,5 +60,12 @@ public class Bishop extends Piece {
         boolean isWhite = Boolean.parseBoolean(data[3]);
 
         return new Bishop(position, isWhite, board);
+    }
+
+    public static Bishop parseBishop(String[] data) {
+        Position position = Position.parsePosition(data[1] + data[2]);
+        boolean isWhite = Boolean.parseBoolean(data[3]);
+
+        return new Bishop(position, isWhite);
     }
 }

@@ -14,10 +14,14 @@ public class Knight extends Piece {
     private static final int[][] moveDirections= {{2,1},{2,-1},{-2,1},{-2,-1},{1,2},{-1,2},{1,-2},{-1,-2}};
 
     public Knight (Position position, boolean isWhite, ActiveBoard activeBoard) {
-        super(position, isWhite, activeBoard);
+        super(position, isWhite);
     }
 
-    protected void getMovesHelper(int colOffset, int rowOffset, LinkedList<Move> moves) {
+    public Knight (Position position, boolean isWhite) {
+        super(position, isWhite);
+    }
+
+    protected void getMovesHelper(int colOffset, int rowOffset, LinkedList<Move> moves, ActiveBoard activeBoard) {
         Position temp = this.position.getPositionWithOffset(colOffset, rowOffset);
         if(activeBoard.isInBounds(temp) && !activeBoard.hasFriendlyPieceAtPosition(temp, isWhite)) {
             moves.add(new Move(this, activeBoard, temp));
@@ -49,5 +53,12 @@ public class Knight extends Piece {
         boolean isWhite = Boolean.parseBoolean(data[3]);
 
         return new Knight(position, isWhite, board);
+    }
+
+    public static Knight parseKnight(String[] data) {
+        Position position = Position.parsePosition(data[1] + data[2]);
+        boolean isWhite = Boolean.parseBoolean(data[3]);
+
+        return new Knight(position, isWhite);
     }
 }
