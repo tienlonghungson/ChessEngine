@@ -17,14 +17,14 @@ public class King extends Piece implements FirstMoveMatters {
 
     public boolean hasMoved;
 
-    public King (Position position, boolean isWhite, Board board) {
-        this(position, isWhite, false, board);
-    }
+//    public King (Position position, boolean isWhite, Board board) {
+//        this(position, isWhite, false, board);
+//    }
 
-    public King(Position position, boolean isWhite, boolean hasMoved, Board board) {
-        super(position, isWhite);
-        this.hasMoved = hasMoved;
-    }
+//    public King(Position position, boolean isWhite, boolean hasMoved, Board board) {
+//        super(position, isWhite);
+//        this.hasMoved = hasMoved;
+//    }
 
     public King(Position position, boolean isWhite, boolean hasMoved) {
         super(position, isWhite);
@@ -33,7 +33,7 @@ public class King extends Piece implements FirstMoveMatters {
 
     /**
      * @return list of {@code moves} which is valid
-     * @param activeBoard
+     * @param activeBoard where all the moves has been(can be ) executed
      */
     @Override
     public LinkedList<Move> getMoves(ActiveBoard activeBoard) {
@@ -140,13 +140,13 @@ public class King extends Piece implements FirstMoveMatters {
         this.hasMoved = hasMoved;
     }
 
-    public static King parseKing(String[] data, Board board) {
-        Position position = Position.parsePosition(data[1] + data[2]);
-        boolean isWhite = Boolean.parseBoolean(data[3]);
-        boolean hasMoved = Boolean.parseBoolean(data[4]);
-
-        return new King(position, isWhite, hasMoved, board);
-    }
+//    public static King parseKing(String[] data, Board board) {
+//        Position position = Position.parsePosition(data[1] + data[2]);
+//        boolean isWhite = Boolean.parseBoolean(data[3]);
+//        boolean hasMoved = Boolean.parseBoolean(data[4]);
+//
+//        return new King(position, isWhite, hasMoved, board);
+//    }
 
     public static King parseKing(String[] data) {
         Position position = Position.parsePosition(data[1] + data[2]);

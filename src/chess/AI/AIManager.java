@@ -1,9 +1,9 @@
 package src.chess.AI;
 
 public class AIManager implements Runnable {
-    private AI ai;
+    private MinimaxAI ai;
 
-    public AIManager(AI ai) {
+    public AIManager(MinimaxAI ai) {
         this.ai = ai;
     }
 

@@ -4,21 +4,19 @@ import src.chess.move.Move;
 import src.controller.BoardController;
 import src.position.Position;
 
-import javafx.stage.Stage;
 import src.chess.piece.King;
 import src.chess.piece.Pawn;
 import src.chess.piece.Piece;
 
 import java.util.LinkedList;
+import java.util.Stack;
 
 public class Board implements ActiveBoard {
-    public static final int TILE_WIDTH = 64;
     public static final int ROWS = 8;
     public static final int COLUMNS = 8;
 
     private BoardController controller;
 
-    private Stage window;
 
     private Piece[] whitePieces;
     private Piece[] blackPieces;
@@ -68,9 +66,9 @@ public class Board implements ActiveBoard {
 //    }
 
 
-    public void giveBestMove(Move move) {
-        controller.executeNextMove(move);
-    }
+//    public void giveBestMove(Move move) {
+//        controller.executeNextMove(move);
+//    }
 
     /**
      * get all possible moves of a player
@@ -151,11 +149,13 @@ public class Board implements ActiveBoard {
      */
     public boolean checkForCheck(boolean isWhite) {
         Piece king = getKing(isWhite);
-        if(!isSafeMove(king.getPosition(), isWhite)) {
-//            activeBoardView.showWarning(king.getPosition());
-            return true;
-        }
-        return false;
+        //            activeBoardView.showWarning(king.getPosition());
+//        if(!isSafeMove(king.getPosition(), isWhite)) {
+////            activeBoardView.showWarning(king.getPosition());
+//            return true;
+//        }
+//        return false;
+        return !isSafeMove(king.getPosition(), isWhite);
     }
 
     /**
@@ -367,7 +367,8 @@ public class Board implements ActiveBoard {
         return true;
     }
 
-//    /**
+
+    //    /**
 //     * Sets up a new Board object from a specified file
 //     *
 //     * @param file contains the Board information

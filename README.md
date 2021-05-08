@@ -5,6 +5,7 @@ This is just the demo engine.
 
 TO-DO :
 - Redesign - Separate engine and GUI
+- En Passant 
 - Speed-up Engine
 - Allow removed for human player
 - Restarts when game ends

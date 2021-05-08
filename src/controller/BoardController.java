@@ -26,10 +26,10 @@ public class BoardController {
 
     private static final int ROWS = 8;
     private static final int COLUMNS = 8;
+    private static Stack<Move> pastMoves;
 
     private ActiveBoard activeBoard;
     private ActiveBoardView activeBoardView;
-    private Stack<Move> pastMoves;
 
     private Status status;
     private boolean isWhiteTurn;
@@ -51,8 +51,8 @@ public class BoardController {
 
         black.setBoardController(this);
         white.setBoardController(this);
-        black.setActiveBoard(activeBoard);
-        white.setActiveBoard(activeBoard);
+//        black.setActiveBoard(activeBoard);
+//        white.setActiveBoard(activeBoard);
 
         this.black = black;
         this.white = white;
@@ -120,6 +120,7 @@ public class BoardController {
     public ActiveBoardView getActiveBoardView() {
         return activeBoardView;
     }
+    public ActiveBoard getActiveBoard(){return activeBoard;}
 
     /**
      * start displaying the game
@@ -152,6 +153,7 @@ public class BoardController {
         }
         pastMoves.push(move);
         move.doMove(true);
+        System.out.println(move.toString());
         activeBoardView.clearHighlights();
         if(activeBoard.checkForCheck(!isWhiteTurn)) {
             activeBoardView.showWarning(activeBoard.getKing(!isWhiteTurn).getPosition());
@@ -175,9 +177,9 @@ public class BoardController {
     public void changeTurn() {
         isWhiteTurn = !isWhiteTurn;
         if(isWhiteTurn) {
-            white.calculateNextMove(this);
+            white.calculateNextMove();
         } else {
-            black.calculateNextMove(this);
+            black.calculateNextMove();
         }
     }
 
@@ -193,5 +195,20 @@ public class BoardController {
         } else {
             black.forwardBoardInput(position);
         }
+    }
+
+    public static Move getLastMove(){
+        if (!pastMoves.empty()) {
+            return pastMoves.peek();
+        }
+        return null;
+    }
+
+    public static void pushMove(Move move){
+        pastMoves.push(move);
+    }
+
+    public static Move popMove(){
+        return pastMoves.pop();
     }
 }

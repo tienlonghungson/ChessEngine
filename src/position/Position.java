@@ -7,7 +7,7 @@ import src.chess.Board.Board;
  *
  * NOTE! While the object parses data in the form of row (from 8 to 1) and column (from A to E),
  * the object stores the data in the form of integer positions ex. row (from 0 to 7) and column (from 0 to 7).
- * Rows are stored from 0 to 8 but is outputted from 8 to 1
+ * Rows are stored from 0 to 7 but is outputted from 8 to 1
  * ex. "1A" = R: 7, C: 0
  *
  */

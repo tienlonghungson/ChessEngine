@@ -1,7 +1,7 @@
 package src.chess.piece;
 
 import src.chess.Board.ActiveBoard;
-import src.chess.Board.Board;
+
 import src.chess.Launcher;
 import src.chess.move.Move;
 import src.position.Position;
@@ -11,7 +11,7 @@ import src.view.piece.PieceView;
 import java.util.LinkedList;
 
 public abstract class Piece{
-    public static final long TRANSITION_TIME = 400; //400
+//    public static final long TRANSITION_TIME = 400; //400
 
     protected boolean isWhite;
     protected boolean isDead;
@@ -35,7 +35,7 @@ public abstract class Piece{
     /**
      *
      * @return the list of possible moves (including valid moves and moves can cause the king to be unsafe)
-     * @param activeBoard
+     * @param activeBoard where these moves can happen
      */
     public LinkedList<Move> getMoves(ActiveBoard activeBoard){
         LinkedList<Move> moves = new LinkedList<>();
@@ -52,7 +52,7 @@ public abstract class Piece{
      * @param rowInc x coordinate of direction
      * @param colInc y coordinate of direction
      * @param moves contains the moves if they are valid
-     * @param activeBoard
+     * @param activeBoard where this method make impact
      */
     protected abstract void getMovesHelper(int rowInc, int colInc, LinkedList<Move> moves, ActiveBoard activeBoard);
 
@@ -65,7 +65,7 @@ public abstract class Piece{
     /**
      * valid moves are list of possible moves excluding moves cause the king to be unsafe
      * @return list of valid move
-     * @param activeBoard
+     * @param activeBoard where these moves can happen
      */
     public LinkedList<Move> getValidMoves(ActiveBoard activeBoard) {
         LinkedList<Move> validMoves = new LinkedList<>();
@@ -136,21 +136,21 @@ public abstract class Piece{
         return (int) Math.hypot(3.5 - position.getRow(), 3.5 - position.getCol());
     }
 
-    public static Piece parsePiece(String rawData, Board board) {
-        rawData = rawData.substring(1);
-        String[] data = rawData.split("[\\W]+");
-
-        return switch (data[0]) {
-            case "P" -> Pawn.parsePawn(data, board);
-            case "R" -> Rook.parseRook(data, board);
-            case "Kn" -> Knight.parseKnight(data, board);
-            case "B" -> Bishop.parseBishop(data, board);
-            case "Q" -> Queen.parseQueen(data, board);
-            case "K" -> King.parseKing(data, board);
-            default -> null;
-        };
-
-    }
+//    public static Piece parsePiece(String rawData, Board board) {
+//        rawData = rawData.substring(1);
+//        String[] data = rawData.split("[\\W]+");
+//
+//        return switch (data[0]) {
+//            case "P" -> Pawn.parsePawn(data, board);
+//            case "R" -> Rook.parseRook(data, board);
+//            case "Kn" -> Knight.parseKnight(data, board);
+//            case "B" -> Bishop.parseBishop(data, board);
+//            case "Q" -> Queen.parseQueen(data, board);
+//            case "K" -> King.parseKing(data, board);
+//            default -> null;
+//        };
+//
+//    }
 
     public static Piece parsePiece(String rawData) {
         rawData = rawData.substring(1);

@@ -4,7 +4,6 @@ import src.chess.AI.Settings;
 import src.chess.move.Move;
 import src.chess.move.MoveConformationWindow;
 import src.chess.piece.Piece;
-import src.controller.BoardController;
 import src.position.Position;
 import src.position.PositionMap;
 
@@ -19,18 +18,18 @@ public class HumanPlayer extends Player {
         super(isWhite);
     }
 
-    public void calculateNextMove(BoardController boardController) {}
+    public void calculateNextMove() {}
 
     public void forwardBoardInput(Position position) {
         // everytime we clicked a piece, highlight turns on
         // so if we clicked a another piece, we need to turn off the highlight of the last piece
         boardController.getActiveBoardView().clearHighlights();
         if(highlightedPiece == null) {
-            Piece piece = activeBoard.getPiece(position);
+            Piece piece = boardController.getActiveBoard().getPiece(position);
             if(piece != null && piece.isWhite() == isWhite) {
                 boardController.getActiveBoardView().highlight(position);
                 highlightedPiece = piece;
-                LinkedList<Move> moves = piece.getValidMoves(activeBoard);
+                LinkedList<Move> moves = piece.getValidMoves(boardController.getActiveBoard());
                 positionMap = Piece.getMoveMap(moves);
                 if(Settings.showMoves) {
                     for (Move move : moves) {

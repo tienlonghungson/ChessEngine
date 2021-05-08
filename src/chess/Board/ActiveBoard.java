@@ -157,5 +157,6 @@ public interface ActiveBoard {
 
     // TODO recode giveBestMove
 
-    void giveBestMove(Move move);
+//    void giveBestMove(Move move);
+
 }
