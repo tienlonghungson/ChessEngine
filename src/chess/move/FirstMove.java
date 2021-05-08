@@ -1,7 +1,6 @@
 package src.chess.move;
 
 import src.chess.Board.ActiveBoard;
-import src.chess.Board.Board;
 import src.chess.piece.FirstMoveMatters;
 import src.chess.piece.Pawn;
 import src.chess.piece.Piece;

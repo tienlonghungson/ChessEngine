@@ -79,13 +79,11 @@ public class Pawn extends Piece implements FirstMoveMatters {
                 moves.addAll(setupMove(temp.getPositionWithOffset(),activeBoard));
             }
 
-            //TODO check setup en passant
             int row;
             row = isWhite ? 3:4;
             if (position.getRow()==row) {
                 int catchableRow, endRow ;
                 catchableRow = isWhite?1:6; endRow = (row+catchableRow)>>1;
-//            int catchableRow = isWhite?1:6; // the row which can be caught by En Passant
                 Move lastMove = BoardController.getLastMove();
                 if (lastMove instanceof FirstMove){ // no need to check null before instance of
                     if (((FirstMove) lastMove).isPawn()) {

@@ -136,22 +136,6 @@ public abstract class Piece{
         return (int) Math.hypot(3.5 - position.getRow(), 3.5 - position.getCol());
     }
 
-//    public static Piece parsePiece(String rawData, Board board) {
-//        rawData = rawData.substring(1);
-//        String[] data = rawData.split("[\\W]+");
-//
-//        return switch (data[0]) {
-//            case "P" -> Pawn.parsePawn(data, board);
-//            case "R" -> Rook.parseRook(data, board);
-//            case "Kn" -> Knight.parseKnight(data, board);
-//            case "B" -> Bishop.parseBishop(data, board);
-//            case "Q" -> Queen.parseQueen(data, board);
-//            case "K" -> King.parseKing(data, board);
-//            default -> null;
-//        };
-//
-//    }
-
     public static Piece parsePiece(String rawData) {
         rawData = rawData.substring(1);
         String[] data = rawData.split("[\\W]+");

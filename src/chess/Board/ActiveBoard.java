@@ -3,7 +3,6 @@ package src.chess.Board;
 import src.chess.move.Move;
 import src.chess.piece.Piece;
 import src.position.Position;
-import src.view.board.ActiveBoardView;
 
 import java.util.LinkedList;
 
@@ -153,10 +152,4 @@ public interface ActiveBoard {
      * @return {@code true} if the king is under attack, {@code false} otherwise
      */
     boolean checkForCheck(boolean isWhite);
-
-
-    // TODO recode giveBestMove
-
-//    void giveBestMove(Move move);
-
 }

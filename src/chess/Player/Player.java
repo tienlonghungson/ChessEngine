@@ -8,7 +8,6 @@ public abstract class Player {
     public static final String[] PLAYER_TYPES = {"Human", "Computer"};
 
     protected boolean isWhite;
-//    protected ActiveBoard activeBoard;
 
     protected BoardController boardController;
 
@@ -19,10 +18,6 @@ public abstract class Player {
     public void setBoardController(BoardController boardController) {
         this.boardController = boardController;
     }
-
-//    public void setActiveBoard(ActiveBoard activeBoard) {
-//        this.activeBoard = activeBoard;
-//    }
 
     public void returnMove(Move move) {
         boardController.executeNextMove(move);

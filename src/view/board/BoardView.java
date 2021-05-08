@@ -63,8 +63,4 @@ public class BoardView implements ActiveBoardView {
         grid[position.getRow()][position.getCol()].warn();
     }
 
-    @Override
-    public void giveBestMove(Move move, BoardController boardController) {
-        boardController.executeNextMove(move);
-    }
 }

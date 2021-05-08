@@ -14,10 +14,6 @@ public class Queen extends Piece {
     public static final String NAME = "Queen";
     private static final int[][] moveDirections = {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1}};
 
-//    public Queen (Position position, boolean isWhite, ActiveBoard activeBoard) {
-//        super(position, isWhite);
-//    }
-
     public Queen (Position position, boolean isWhite) {
         super(position, isWhite);
     }
@@ -55,13 +51,6 @@ public class Queen extends Piece {
     public String getName() {
         return NAME;
     }
-
-//    public static Queen parseQueen(String[] data, Board board) {
-//        Position position = Position.parsePosition(data[1] + data[2]);
-//        boolean isWhite = Boolean.parseBoolean(data[3]);
-//
-//        return new Queen(position, isWhite, board);
-//    }
 
     public static Queen parseQueen(String[] data) {
         Position position = Position.parsePosition(data[1] + data[2]);

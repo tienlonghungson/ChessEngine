@@ -9,10 +9,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class MinimaxAI extends AI {// implements Runnable {
+public class MinimaxAI extends AI {
     private static final boolean VISUAL_CALCULATIONS = false;
 
-//    private ActiveBoard activeBoard;
     private final boolean isWhite;
     private final AISettings settings;
     private int stateCounter = 0;
@@ -44,17 +43,14 @@ public class MinimaxAI extends AI {// implements Runnable {
                 move.doMove(VISUAL_CALCULATIONS);
                 BoardController.pushMove(move);
                 int tempScore;
-//                if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForStaleMate(!isWhite)) {
                 if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForStaleMate(false)) {
                     tempScore = 0;
-//                } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForCheckMate(!isWhite)) {
                 } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForCheckMate(false)) {
                     tempScore = Integer.MAX_VALUE;
                 } else {
                     tempScore = getBestMoveHelper(false, alpha, beta, depth);
                 }
-                move.undoMove(VISUAL_CALCULATIONS);
-                BoardController.popMove();
+                BoardController.undoMove(VISUAL_CALCULATIONS);
                 if(tempScore > bestScore) {
                     bestScore = tempScore;
                     bestMoves = new LinkedList<>();
@@ -76,17 +72,14 @@ public class MinimaxAI extends AI {// implements Runnable {
                 move.doMove(VISUAL_CALCULATIONS);
                 BoardController.pushMove(move);
                 int tempScore;
-//                if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForStaleMate(!isWhite)) {
                 if(settings.checkForStalemateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForStaleMate(true)) {
                     tempScore = 0;
-//                } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForCheckMate(!isWhite)) {
                 } else if (settings.checkForCheckmateDepth > (iterativeDeepeningDepth - depth) && activeBoard.checkForCheckMate(true)) {
                     tempScore = Integer.MIN_VALUE;
                 } else {
                     tempScore = getBestMoveHelper(true, alpha, beta, depth);
                 }
-                move.undoMove(VISUAL_CALCULATIONS);
-                BoardController.popMove();
+                BoardController.undoMove(VISUAL_CALCULATIONS);
                 if(tempScore < bestScore) {
                     bestScore = tempScore;
                     bestMoves = new LinkedList<>();
@@ -132,8 +125,7 @@ public class MinimaxAI extends AI {// implements Runnable {
                 } else {
                     bestScore = Integer.max(bestScore, getBestMoveHelper(false, alpha, beta, depth - 1));
                 }
-                move.undoMove(VISUAL_CALCULATIONS);
-                BoardController.popMove();
+                BoardController.undoMove(VISUAL_CALCULATIONS);
                 alpha = Integer.max(alpha, bestScore);
                 if (beta <= alpha && settings.alphaBetaPruning) {
                     break;
@@ -151,8 +143,7 @@ public class MinimaxAI extends AI {// implements Runnable {
                 } else {
                     bestScore = Integer.min(bestScore, getBestMoveHelper(true, alpha, beta, depth - 1));
                 }
-                move.undoMove(VISUAL_CALCULATIONS);
-                BoardController.popMove();
+                BoardController.undoMove(VISUAL_CALCULATIONS);
 
                 beta = Integer.min(beta, bestScore);
                 if (beta <= alpha && settings.alphaBetaPruning) {
@@ -199,19 +190,8 @@ public class MinimaxAI extends AI {// implements Runnable {
         if(settings.moveOrdering) {
             Collections.sort(bestMoves);
             System.out.println(getName() + "'s best moves: " + bestMoves);
-//            activeBoard.giveBestMove(bestMoves.getFirst());
             return bestMoves.getFirst();
-//            beingCalculatedMove = bestMoves.getFirst();
-//            System.out.println("1Cal "+bestMoves.getFirst().toString());
-//            System.out.println("1Get "+ beingCalculatedMove.toString());
         } else {
-//            beingCalculatedMove = bestMoves.get((int) (Math.random() * bestMoves.size()));
-//            System.out.println("2Cal "+ bestMoves.get((int) (Math.random() * bestMoves.size())).toString());
-//            System.out.println("2Get "+ beingCalculatedMove.toString());
-
-//            activeBoard.giveBestMove(move);
-//            Move move = bestMoves.get((int) (Math.random() * bestMoves.size()));
-//            return move;
             return bestMoves.get((int) (Math.random() * bestMoves.size()));
         }
     }
@@ -224,6 +204,4 @@ public class MinimaxAI extends AI {// implements Runnable {
         System.out.printf("Reached a depth of %d, chose one out of %d equal moves, and evaluated %,d moves%n", iterativeDeepeningDepth, size, stateCounter);
         stateCounter = 0;
     }
-
-
 }

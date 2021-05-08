@@ -13,10 +13,6 @@ public class Bishop extends Piece {
     public static final String NAME = "Bishop";
     private static final int[][] moveDirections = {{1,1},{-1,1},{-1,-1},{1,-1}};
 
-//    public Bishop (Position position, boolean isWhite, Board board) {
-//        super(position, isWhite);
-//    }
-
     public Bishop (Position position, boolean isWhite) {
         super(position, isWhite);
     }
@@ -54,13 +50,6 @@ public class Bishop extends Piece {
     public String getName() {
         return NAME;
     }
-
-//    public static Bishop parseBishop(String[] data, Board board) {
-//        Position position = Position.parsePosition(data[1] + data[2]);
-//        boolean isWhite = Boolean.parseBoolean(data[3]);
-//
-//        return new Bishop(position, isWhite, board);
-//    }
 
     public static Bishop parseBishop(String[] data) {
         Position position = Position.parsePosition(data[1] + data[2]);

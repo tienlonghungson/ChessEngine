@@ -15,15 +15,6 @@ public class Rook extends Piece implements FirstMoveMatters {
 
     public boolean hasMoved;
 
-//    public Rook (Position position, boolean isWhite, ActiveBoard activeBoard) {
-//        this(position, isWhite, false, activeBoard);
-//    }
-
-//    public Rook(Position position, boolean isWhite, boolean hasMoved, ActiveBoard activeBoard) {
-//        super(position, isWhite);
-//        this.hasMoved = hasMoved;
-//    }
-
     public Rook(Position position, boolean isWhite, boolean hasMoved) {
         super(position, isWhite);
         this.hasMoved = hasMoved;
@@ -86,14 +77,6 @@ public class Rook extends Piece implements FirstMoveMatters {
     public void setHasMoved(boolean hasMoved) {
         this.hasMoved = hasMoved;
     }
-
-//    public static Rook parseRook(String[] data, Board board) {
-//        Position position = Position.parsePosition(data[1] + data[2]);
-//        boolean isWhite = Boolean.parseBoolean(data[3]);
-//        boolean hasMoved = Boolean.parseBoolean(data[4]);
-//
-//        return new Rook(position, isWhite, hasMoved, board);
-//    }
 
     public static Rook parseRook(String[] data) {
         Position position = Position.parsePosition(data[1] + data[2]);

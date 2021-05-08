@@ -52,7 +52,6 @@ public class Launcher extends Application {
 
         Button button = new Button("Done");
         button.setOnAction(e -> {
-//            ActiveBoard activeBoard = Board.setupFromFile(new File(filePath.getAbsolutePath() + "/Boards/DefaultBoard.txt"),b);
             b = new BoardController(filePath.getAbsolutePath() + "/Boards/DefaultBoard.txt", whitePlayer, blackPlayer);
             launcherWindow.close();
             b.startDisplay();

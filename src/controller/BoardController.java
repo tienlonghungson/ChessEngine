@@ -51,8 +51,6 @@ public class BoardController {
 
         black.setBoardController(this);
         white.setBoardController(this);
-//        black.setActiveBoard(activeBoard);
-//        white.setActiveBoard(activeBoard);
 
         this.black = black;
         this.white = white;
@@ -90,12 +88,6 @@ public class BoardController {
             activeBoard = new Board(whitePieces,blackPieces,this);
             activeBoardView = new BoardView(whitePieceViews, blackPieceViews,createSpot());
 
-//            for (int i = 0; i < numberOfWhitePieces; i++) {
-//
-//            }
-//            for (int i = 0; i < numberOfBlackPieces; i++) {
-//
-//            }
         } catch (FileNotFoundException e) {
             System.err.print("CANNOT READ BOARD FROM FILE:");
             System.err.println(file.getAbsolutePath());
@@ -183,12 +175,6 @@ public class BoardController {
         }
     }
 
-
-    //TODO
-    public void undoMove() {
-        pastMoves.pop().undoMove(true);
-    }
-
     public void clickedSquare(Position position) {
         if(isWhiteTurn) {
             white.forwardBoardInput(position);
@@ -207,7 +193,9 @@ public class BoardController {
     public static void pushMove(Move move){
         pastMoves.push(move);
     }
-
+    public static void undoMove(boolean isVisual) {
+        pastMoves.pop().undoMove(isVisual);
+    }
     public static Move popMove(){
         return pastMoves.pop();
     }

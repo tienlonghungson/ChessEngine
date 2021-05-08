@@ -11,7 +11,6 @@ public class ComputerPlayer extends Player {
     public ComputerPlayer(boolean isWhite) {
         super(isWhite);
         this.ai = new MinimaxAI(isWhite, AISettings.chooseAISettings());
-//        this.ai.setActiveBoard(this.boardController.getActiveBoard());
     }
 
 
@@ -24,7 +23,6 @@ public class ComputerPlayer extends Player {
     public void calculateNextMove() {
         System.out.println("Starting AI Thread");
         new Thread(() -> boardController.executeNextMove(ai.makeMove())).start();
-//        boardController.executeNextMove(beingCalculatedMove);
     }
 
     public void forwardBoardInput(Position position) {

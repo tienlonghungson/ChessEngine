@@ -28,6 +28,4 @@ public interface ActiveBoardView {
      * @param position where the warning is shown
      */
     void showWarning(Position position);
-
-    void giveBestMove(Move move, BoardController boardController);
 }
