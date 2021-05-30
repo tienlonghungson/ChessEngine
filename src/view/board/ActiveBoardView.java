@@ -2,7 +2,6 @@ package src.view.board;
 
 import javafx.scene.Parent;
 import src.controller.BoardController;
-import src.chess.move.Move;
 import src.position.Position;
 
 public interface ActiveBoardView {

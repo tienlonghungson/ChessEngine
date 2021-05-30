@@ -1,6 +1,6 @@
 package src.position;
 
-import src.chess.Board.Board;
+import src.model.board.ActiveBoard;
 
 /**
  * Position object used to store the position of a piece
@@ -91,7 +91,7 @@ public class Position {
         int row = 8 - (rawData.charAt(0) - 48);
         int column = rawData.charAt(1) - 65;
 
-        if(row < 0 || row >= Board.ROWS || column < 0 || column >= Board.COLUMNS) {
+        if(row < 0 || row >= ActiveBoard.ROWS || column < 0 || column >= ActiveBoard.COLUMNS) {
             return null;
         } else {
             return new Position(row, column);
@@ -106,7 +106,7 @@ public class Position {
      * @return Returns a string representation of a Position
      */
     public String toString() {
-       return String.format("%d%c", Board.ROWS - row, (char)(column + 65));
+       return String.format("%d%c", ActiveBoard.ROWS - row, (char)(column + 65));
     }
 
     /**
@@ -116,6 +116,6 @@ public class Position {
      * @return an integer representing the distance
      */
     public static int distanceFromMiddle(Position position) {
-        return (int)Math.abs(((Board.ROWS - 1) / 2.0) - position.getRow()) + (int)Math.abs(((Board.COLUMNS - 1) / 2.0) - position.getCol());
+        return (int)Math.abs(((ActiveBoard.ROWS - 1) / 2.0) - position.getRow()) + (int)Math.abs(((ActiveBoard.COLUMNS - 1) / 2.0) - position.getCol());
     }
 }

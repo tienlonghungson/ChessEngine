@@ -4,7 +4,7 @@ import javafx.animation.TranslateTransition;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.util.Duration;
-import src.chess.piece.Piece;
+import src.model.piece.Piece;
 import src.position.Position;
 import src.view.board.ActiveBoardView;
 
@@ -23,12 +23,10 @@ public class PieceView extends ImageView{
 
 
     public void kill() {
-        //TODO this method hasn't been test
         setVisible(false);
     }
 
     public void revive() {
-        //TODO this method hasn't been test
         setVisible(true);
     }
     public void setupIcon(String filePath, Piece piece) {

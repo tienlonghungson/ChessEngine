@@ -3,7 +3,6 @@ package src.view.board;
 import javafx.scene.Parent;
 import javafx.scene.layout.Pane;
 import src.controller.BoardController;
-import src.chess.move.Move;
 import src.position.Position;
 import src.view.piece.PieceView;
 

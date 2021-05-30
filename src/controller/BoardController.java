@@ -1,11 +1,11 @@
 package src.controller;
 
-import src.chess.Board.ActiveBoard;
-import src.chess.Board.Board;
-import src.chess.Board.Status;
-import src.chess.Player.Player;
-import src.chess.move.Move;
-import src.chess.piece.Piece;
+import src.model.board.ActiveBoard;
+import src.model.board.Board;
+import src.model.board.Status;
+import src.model.player.Player;
+import src.model.move.Move;
+import src.model.piece.Piece;
 import src.position.Position;
 
 import javafx.scene.Scene;
@@ -39,6 +39,8 @@ public class BoardController {
 
     public boolean isDown = false;
 
+//    private final SavedModelBundle model;
+
     /**
      * construct a {@code BoardController} object with board's information taken from a file
      * @param filePath path to file contains the information of board
@@ -55,6 +57,10 @@ public class BoardController {
         this.black = black;
         this.white = white;
         this.isWhiteTurn = false;
+
+//        model = SavedModelBundle.load("Resources/AIs/models","serve");
+
+//        System.out.println(Arrays.deepToString(OneHotConverter.convertBoardToArray(activeBoard)));
     }
 
     public void setUpBoardFromFile(File file){
@@ -167,6 +173,11 @@ public class BoardController {
     }
 
     public void changeTurn() {
+//        Tensor<Float> input = Tensors.create(OneHotConverter.convertBoardToArray(this.activeBoard));
+//        System.out.println(input);
+//        Tensor<Float> output = model.session().runner().feed("serving_default_conv2d_2_input",input).fetch("StatefulPartitionedCall").run().get(0).expect(Float.class);
+//        System.out.println(output.copyTo(new float[1][1])[0][0]);
+        System.out.println("Zobrist Key : "+activeBoard.getZobristKey(isWhiteTurn));
         isWhiteTurn = !isWhiteTurn;
         if(isWhiteTurn) {
             white.calculateNextMove();
