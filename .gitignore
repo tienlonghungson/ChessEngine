@@ -1,4 +1,6 @@
 Simple-Chess-Engine.iml
+
+.DS_Store
 # Prerequisites
 *.d
 

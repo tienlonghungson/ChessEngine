@@ -1,6 +1,6 @@
 package src.chess;
 
-import src.chess.Board.BoardController;
+import src.controller.BoardController;
 import src.chess.Player.Player;
 import javafx.application.Application;
 import javafx.geometry.Insets;
@@ -18,7 +18,7 @@ import java.io.File;
 public class Launcher extends Application {
     public BoardController b;
     private Stage launcherWindow;
-    public static File filePath = new File((new File("")).getAbsolutePath() + "/Chess");
+    public static File filePath = new File((new File("")).getAbsolutePath() + "/Resources");
 
     private Player blackPlayer;
     private Player whitePlayer;
@@ -65,11 +65,6 @@ public class Launcher extends Application {
         launcherWindow.setScene(scene);
         launcherWindow.setTitle("Chess Launcher");
         launcherWindow.show();
-
-
-//        b = new BoardController("DefaultBoard.txt", Mode.PLAYER_VS_PLAYER, true);
-//        System.out.println("STARTING BOARD CONTROLLER");
-//        b.startDisplay();
     }
 
     public static void main(String[] args) {

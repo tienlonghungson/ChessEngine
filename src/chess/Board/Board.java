@@ -1,159 +1,137 @@
 package src.chess.Board;
 
-import src.chess.Launcher;
 import src.chess.move.Move;
+import src.controller.BoardController;
 import src.position.Position;
-import javafx.scene.Parent;
 
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
 import src.chess.piece.King;
 import src.chess.piece.Pawn;
 import src.chess.piece.Piece;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.Stack;
 
-public class Board {
-    public static final int TILE_WIDTH = 64;
+public class Board implements ActiveBoard {
     public static final int ROWS = 8;
     public static final int COLUMNS = 8;
 
     private BoardController controller;
 
-    private Stage window;
-    private Tile[][] grid;
 
     private Piece[] whitePieces;
     private Piece[] blackPieces;
 
     private Piece[][] board;
 
-    public Board(String[] whitePieces, String[] blackPieces, BoardController controller) {
-        this.whitePieces = new Piece[whitePieces.length];
-        this.blackPieces = new Piece[blackPieces.length];
+    public Board(Piece[] whitePieces, Piece[] blackPieces, BoardController boardController){
+        this.whitePieces = whitePieces;
+        this.blackPieces = blackPieces;
+
         board = new Piece[ROWS][COLUMNS];
-
-//        for (int i = 0; i < whitePieces.length; i++) {
-//            Piece piece = Piece.parsePiece(whitePieces[i], this);
-//            this.whitePieces[i] = piece;
-//            this.put(piece.getPosition(), piece);
-//        }
-
-        int i=0;
-        for (String whitePiece:
+        for (Piece whitePiece:
              whitePieces) {
-            Piece piece = Piece.parsePiece(whitePiece,this);
-            this.whitePieces[i++]= piece;
-            this.put(piece.getPosition(), piece);
+            this.put(whitePiece.getPosition(), whitePiece);
         }
 
-//        for (int i = 0; i < blackPieces.length; i++) {
-//            Piece piece = Piece.parsePiece(blackPieces[i], this);
-//            this.blackPieces[i] = piece;
+        for (Piece blackPiece:
+             blackPieces) {
+            this.put(blackPiece.getPosition(), blackPiece);
+        }
+
+        this.controller = boardController;
+    }
+
+//    public Board(String[] whitePieces, String[] blackPieces, BoardController controller) {
+//        this.whitePieces = new Piece[whitePieces.length];
+//        this.blackPieces = new Piece[blackPieces.length];
+//        board = new Piece[ROWS][COLUMNS];
+//
+//        int i=0;
+//        for (String whitePiece:
+//             whitePieces) {
+//            Piece piece = Piece.parsePiece(whitePiece,this);
+//            this.whitePieces[i++]= piece;
 //            this.put(piece.getPosition(), piece);
 //        }
+//
+//        i=0;
+//        for (String blackPiece:
+//             blackPieces) {
+//            Piece piece = Piece.parsePiece(blackPiece,this);
+//            this.blackPieces[i++] = piece;
+//            this.put(piece.getPosition(),piece);
+//        }
+//
+//        this.controller = controller;
+//    }
 
-        i=0;
-        for (String blackPiece:
-             blackPieces) {
-            Piece piece = Piece.parsePiece(blackPiece,this);
-            this.blackPieces[i++] = piece;
-            this.put(piece.getPosition(),piece);
-        }
 
-        this.controller = controller;
-    }
+//    public void giveBestMove(Move move) {
+//        controller.executeNextMove(move);
+//    }
 
-    public Parent getGUI() {
-        //Board
-        Pane root = new Pane();
-        root.setPrefSize(ROWS * TILE_WIDTH, COLUMNS * TILE_WIDTH);
-        grid = new Tile[ROWS][COLUMNS];
-        for (int r = 0; r < ROWS; r++) {
-            for (int c = 0; c < COLUMNS; c++) {
-                Tile tile = new Tile(r, c, this);
-                grid[r][c] = tile;
-                root.getChildren().add(tile);
-            }
-        }
-
-        //Pieces
-        for (Piece whitePiece: whitePieces) {
-            whitePiece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/Chess_Pieces");
-            root.getChildren().add(whitePiece);
-        }
-
-        for (Piece blackPiece: blackPieces) {
-            blackPiece.setupIcon(Launcher.filePath.getAbsolutePath() + "/Resources/Chess_Pieces");
-            root.getChildren().add(blackPiece);
-        }
-        return root;
-    }
-
-    public void clickedSquare(Position position) {
-        controller.clickedSquare(position);
-    }
-
-    public void giveBestMove(Move move) {
-        controller.giveNextMove(move);
-    }
-
-    public void highlight(Position position) {
-        grid[position.getRow()][position.getCol()].highLight();
-    }
-
-    public void warn(Position position) {
-        grid[position.getRow()][position.getCol()].warn();
-    }
-
-    public void clearHighlights() {
-        for (Tile[] tiles : grid) {
-            for (Tile tile : tiles) {
-                tile.clear();
-            }
-        }
-    }
+    /**
+     * get all possible moves of a player
+     *
+     * @param isWhite whether the player plays black or white
+     * @return list of possible moves of a player
+     */
     public LinkedList<Move> getAllMoves(boolean isWhite) {
         Piece[] pieces = isWhite ? whitePieces : blackPieces;
         LinkedList<Move> moves = new LinkedList<>();
         for (Piece piece: pieces) {
             if (!piece.isDead()) {
-                moves.addAll(piece.getMoves());
+                moves.addAll(piece.getMoves(this));
             }
         }
         return moves;
     }
 
+    /**
+     * get all possible moves excluding castling of a player
+     *
+     * @param isWhite whether the player plays black or white
+     * @return list of possible moves excluding castling of a player
+     */
     private LinkedList<Move> getAllMovesNoCastle(boolean isWhite) {
         Piece[] pieces = isWhite ? whitePieces : blackPieces;
         LinkedList<Move> moves = new LinkedList<>();
         for (Piece piece: pieces) {
             if(!piece.isDead()) {
                 if (piece instanceof King) {
-                    moves.addAll(((King) piece).getMovesNoCastle());
+                    moves.addAll(((King) piece).getMovesNoCastle(this));
                 } else {
-                    moves.addAll(piece.getMoves());
+                    moves.addAll(piece.getMoves(this));
                 }
             }
         }
         return moves;
     }
 
+    /**
+     * get all valid moves of one player
+     *
+     * @param isWhite whether the player plays black or white
+     * @return list of valid moves of one player
+     */
     public LinkedList<Move> getAllValidMoves(boolean isWhite) {
         LinkedList<Move> validMoves = new LinkedList<>();
 
         Piece[] pieces = isWhite ? whitePieces : blackPieces;
         for (Piece piece: pieces) {
             if (!piece.isDead()) {
-                validMoves.addAll(piece.getValidMoves());
+                validMoves.addAll(piece.getValidMoves(this));
             }
         }
         return validMoves;
     }
 
+    /**
+     * get the king
+     *
+     * @param isWhite whether the King is black or white
+     * @return King {@code Piece}
+     */
     public Piece getKing(boolean isWhite) {
         Piece[] pieces = isWhite ? whitePieces : blackPieces;
         for (Piece piece: pieces) {
@@ -164,30 +142,61 @@ public class Board {
         return null;
     }
 
+    /**
+     * check if the king of one player is under attack
+     * @param isWhite whether the player play white or black
+     * @return {@code true} if the king is under attack, {@code false} otherwise
+     */
     public boolean checkForCheck(boolean isWhite) {
         Piece king = getKing(isWhite);
-        if(!isSafeMove(king.getPosition(), isWhite)) {
-            warn(king.getPosition());
-            return true;
-        }
-        return false;
+        //            activeBoardView.showWarning(king.getPosition());
+//        if(!isSafeMove(king.getPosition(), isWhite)) {
+////            activeBoardView.showWarning(king.getPosition());
+//            return true;
+//        }
+//        return false;
+        return !isSafeMove(king.getPosition(), isWhite);
     }
 
+    /**
+     * check if the King can make any moves
+     *
+     * @param isWhite whether the king is black or white
+     * @return {@code true} if the king can move, {@code false} otherwise
+     */
     public boolean checkIfKingCanMove(boolean isWhite) {
-        return getKing(isWhite).getValidMoves().size() != 0;
+        return getKing(isWhite).getValidMoves(this).size() != 0;
     }
 
+    /**
+     * check if a player came to a stalemate
+     *
+     * @param isWhite whether the player plays black or white
+     * @return {@code true} if this player can no longer make any moves, {@code false} otherwise
+     */
     public boolean checkForStaleMate(boolean isWhite) {
         return !checkIfKingCanMove(isWhite) && getAllValidMoves(isWhite).size() == 0;
     }
 
+    /**
+     * check if a player is checkmate
+     *
+     * @param isWhite whether the player plays black or white
+     * @return {@code true} if this player is checkmate, {@code false} otherwise
+     */
     public boolean checkForCheckMate(boolean isWhite) {
         return !isSafeMove(getKing(isWhite).getPosition(), isWhite) && getAllValidMoves(isWhite).size() == 0;
     }
 
-    public boolean openFile(Position position) {
+    /**
+     * check if the file is open
+     *
+     * @param col the file which is checked
+     * @return {@code true} if the file is open, {@code false} otherwise
+     */
+    public boolean openFile(int col) {
         for (int i = 0; i < Board.ROWS; i++) {
-            Piece p = getPiece(new Position(i, position.getCol()));
+            Piece p = getPiece(new Position(i, col));
             if (p instanceof Pawn) {
                 return false;
             }
@@ -195,6 +204,10 @@ public class Board {
         return true;
     }
 
+    /**
+     * calculate score in this board
+     * @return total score in board
+     */
     public int score() {
         int score = 0;
         for (Piece piece: whitePieces) {
@@ -257,7 +270,7 @@ public class Board {
     }
 
     /**
-     * Removes the piece from the board array and sets the pieces' isDead value to true
+     * Removes the piece from the board array and sets the piece's isDead value to true
      *
      * @param piece which is dead
      * @param isVisual whether the move is visible
@@ -354,35 +367,36 @@ public class Board {
         return true;
     }
 
-    /**
-     * Sets up a new Board object from a specified file
-     *
-     * @param file contains the Board information
-     * @return a {@code Board} object representing the Board from file
-     */
-    public static Board setupFromFile(File file, BoardController controller) {
-        try {
-            Scanner in = new Scanner(file);
 
-            int numberOfWhitePieces = Integer.parseInt(in.nextLine().replaceAll("\\D", ""));
-            String[] whitePieces = new String[numberOfWhitePieces];
-            for (int i = 0; i < numberOfWhitePieces; i++) {
-                whitePieces[i] = in.nextLine();
-            }
-
-            int numberOfBlackPieces = Integer.parseInt(in.nextLine().replaceAll("\\D", ""));
-            String[] blackPieces = new String[numberOfWhitePieces];
-            for (int i = 0; i < numberOfBlackPieces; i++) {
-                blackPieces[i] = in.nextLine();
-            }
-            return new Board(whitePieces, blackPieces, controller);
-        } catch (FileNotFoundException e) {
-            System.err.print("CANNOT READ BOARD FROM FILE:");
-            System.err.println(file.getAbsolutePath());
-        }
-
-        return null;
-    }
+    //    /**
+//     * Sets up a new Board object from a specified file
+//     *
+//     * @param file contains the Board information
+//     * @return a {@code Board} object representing the Board from file
+//     */
+//    public static Board setupFromFile(File file, BoardController controller) {
+//        try {
+//            Scanner in = new Scanner(file);
+//
+//            int numberOfWhitePieces = Integer.parseInt(in.nextLine().replaceAll("\\D", ""));
+//            String[] whitePieces = new String[numberOfWhitePieces];
+//            for (int i = 0; i < numberOfWhitePieces; i++) {
+//                whitePieces[i] = in.nextLine();
+//            }
+//
+//            int numberOfBlackPieces = Integer.parseInt(in.nextLine().replaceAll("\\D", ""));
+//            String[] blackPieces = new String[numberOfWhitePieces];
+//            for (int i = 0; i < numberOfBlackPieces; i++) {
+//                blackPieces[i] = in.nextLine();
+//            }
+//            return new Board(whitePieces, blackPieces, controller);
+//        } catch (FileNotFoundException e) {
+//            System.err.print("CANNOT READ BOARD FROM FILE:");
+//            System.err.println(file.getAbsolutePath());
+//        }
+//
+//        return null;
+//    }
 
     public void print() {
         for (int i = 0; i < 8; i++) {

@@ -2,8 +2,7 @@ package src.position;
 
 import java.util.LinkedList;
 
-public class PositionMap<E>
-{
+public class PositionMap<E> {
     private LinkedList<E>[] mapE;
     private LinkedList<Position>[] mapP;
     private int size;

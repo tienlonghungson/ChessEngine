@@ -1,5 +1,6 @@
 package src.chess.piece;
 
+import src.chess.Board.ActiveBoard;
 import src.chess.Board.Board;
 import src.chess.move.Castling;
 import src.chess.move.FirstMove;
@@ -12,81 +13,92 @@ public class King extends Piece implements FirstMoveMatters {
     public static final int SCORE = 400;
     public static final String ID = "K";
     public static final String NAME = "King";
-
+    private static final int[][] moveDirections = {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1}};
 
     public boolean hasMoved;
 
-    public King (Position position, boolean isWhite, Board board) {
-        this(position, isWhite, false, board);
-    }
+//    public King (Position position, boolean isWhite, Board board) {
+//        this(position, isWhite, false, board);
+//    }
 
-    public King(Position position, boolean isWhite, boolean hasMoved, Board board) {
-        super(position, isWhite, board);
+//    public King(Position position, boolean isWhite, boolean hasMoved, Board board) {
+//        super(position, isWhite);
+//        this.hasMoved = hasMoved;
+//    }
+
+    public King(Position position, boolean isWhite, boolean hasMoved) {
+        super(position, isWhite);
         this.hasMoved = hasMoved;
     }
 
+    /**
+     * @return list of {@code moves} which is valid
+     * @param activeBoard where all the moves has been(can be ) executed
+     */
     @Override
-    public LinkedList<Move> getMoves() {
+    public LinkedList<Move> getMoves(ActiveBoard activeBoard) {
         LinkedList<Move> moves = new LinkedList<>();
 
-        moves.addAll(getMovesNoCastle());
-        moves.addAll(getMovesCastle());
+        moves.addAll(getMovesNoCastle(activeBoard));
+        moves.addAll(getMovesCastle(activeBoard));
 
         return moves;
     }
 
-    public LinkedList<Move> getMovesNoCastle() {
+    public LinkedList<Move> getMovesNoCastle(ActiveBoard activeBoard) {
         LinkedList<Move> moves = new LinkedList<>();
+        final int[][] moveDirections = moveDirections();
 
-        getMovesHelper(1, 0, moves, board);
-        getMovesHelper(1, 1, moves, board);
-        getMovesHelper(0, 1, moves, board);
-        getMovesHelper(-1, 1, moves, board);
-        getMovesHelper(-1, 0, moves, board);
-        getMovesHelper(-1, -1, moves, board);
-        getMovesHelper(0, -1, moves, board);
-        getMovesHelper(1, -1, moves, board);
+        for (int[] direction:
+             moveDirections) {
+            getMovesHelper(direction[0],direction[1],moves,activeBoard );
+        }
 
         return moves;
     }
 
-    public void getMovesHelper(int rowOffset, int colOffset, LinkedList<Move> moves, Board board) {
+    protected void getMovesHelper(int rowOffset, int colOffset, LinkedList<Move> moves, ActiveBoard activeBoard) {
         Position temp = this.position.getPositionWithOffset(colOffset, rowOffset);
-        if(board.isInBounds(temp) && !board.hasFriendlyPieceAtPosition(temp, isWhite)) {
-            moves.add(setupMove(temp));
+        if(activeBoard.isInBounds(temp) && !activeBoard.hasFriendlyPieceAtPosition(temp, isWhite)) {
+            moves.add(setupMove(temp, activeBoard));
         }
     }
 
-    public LinkedList<Move> getMovesCastle() {
+    @Override
+    protected int[][] moveDirections() {
+        return moveDirections;
+    }
+
+    public LinkedList<Move> getMovesCastle(ActiveBoard activeBoard) {
         LinkedList<Move> moves = new LinkedList<>();
 
-        if(!hasMoved && board.isSafeMove(this.position, isWhite)) {
-            Piece leftPiece = board.getPiece(new Position(position.getRow(), 0));
+        if(!hasMoved && activeBoard.isSafeMove(this.position, isWhite)) {
+            Piece leftPiece = activeBoard.getPiece(new Position(position.getRow(), 0));
             if(leftPiece instanceof Rook) {
                 if (!((Rook) leftPiece).hasMoved) {
                     boolean canCastle = true;
                     for (int i = position.getCol() - 1; i > 0 && canCastle; i--) {
-                        if (!board.isCleanMove(new Position(position.getRow(), i), isWhite)) {
+                        if (!activeBoard.isCleanMove(new Position(position.getRow(), i), isWhite)) {
                             canCastle = false;
                         }
                     }
                     if(canCastle) {
-                        moves.add(new Castling(this, leftPiece, position.getPositionWithOffset(0, -2), position.getPositionWithOffset(0, -1), board));
+                        moves.add(new Castling(this, leftPiece, position.getPositionWithOffset(0, -2), position.getPositionWithOffset(0, -1), activeBoard));
                     }
                 }
             }
 
-            Piece rightPiece = board.getPiece(new Position(position.getRow(), Board.COLUMNS - 1));
+            Piece rightPiece = activeBoard.getPiece(new Position(position.getRow(), Board.COLUMNS - 1));
             if(rightPiece instanceof Rook) {
                 if (!((Rook) rightPiece).hasMoved) {
                     boolean canCastle = true;
                     for (int i = position.getCol() + 1; i < Board.COLUMNS - 1 && canCastle; i++) {
-                        if (!board.isCleanMove(new Position(position.getRow(), i), isWhite)) {
+                        if (!activeBoard.isCleanMove(new Position(position.getRow(), i), isWhite)) {
                             canCastle = false;
                         }
                     }
                     if(canCastle) {
-                        moves.add(new Castling(this, rightPiece, position.getPositionWithOffset(0, 2), position.getPositionWithOffset(0, 1), board));
+                        moves.add(new Castling(this, rightPiece, position.getPositionWithOffset(0, 2), position.getPositionWithOffset(0, 1), activeBoard));
                     }
                 }
             }
@@ -95,11 +107,11 @@ public class King extends Piece implements FirstMoveMatters {
         return moves;
     }
 
-    private Move setupMove(Position position) {
+    private Move setupMove(Position position, ActiveBoard activeBoard) {
         if(hasMoved) {
-            return new Move(this, board, position);
+            return new Move(this, activeBoard, position);
         } else {
-            return new FirstMove(this, board, position);
+            return new FirstMove(this, activeBoard, position);
         }
     }
 
@@ -128,11 +140,19 @@ public class King extends Piece implements FirstMoveMatters {
         this.hasMoved = hasMoved;
     }
 
-    public static King parseKing(String[] data, Board board) {
+//    public static King parseKing(String[] data, Board board) {
+//        Position position = Position.parsePosition(data[1] + data[2]);
+//        boolean isWhite = Boolean.parseBoolean(data[3]);
+//        boolean hasMoved = Boolean.parseBoolean(data[4]);
+//
+//        return new King(position, isWhite, hasMoved, board);
+//    }
+
+    public static King parseKing(String[] data) {
         Position position = Position.parsePosition(data[1] + data[2]);
         boolean isWhite = Boolean.parseBoolean(data[3]);
         boolean hasMoved = Boolean.parseBoolean(data[4]);
 
-        return new King(position, isWhite, hasMoved, board);
+        return new King(position, isWhite, hasMoved);
     }
 }

@@ -14,25 +14,26 @@ public class HumanPlayer extends Player {
     private Piece highlightedPiece;
     private PositionMap<Move> positionMap;
 
-    public HumanPlayer(boolean isWhite)
-    {
+    public HumanPlayer(boolean isWhite) {
         super(isWhite);
     }
 
     public void calculateNextMove() {}
 
     public void forwardBoardInput(Position position) {
-        board.clearHighlights();
+        // everytime we clicked a piece, highlight turns on
+        // so if we clicked a another piece, we need to turn off the highlight of the last piece
+        boardController.getActiveBoardView().clearHighlights();
         if(highlightedPiece == null) {
-            Piece piece = board.getPiece(position);
+            Piece piece = boardController.getActiveBoard().getPiece(position);
             if(piece != null && piece.isWhite() == isWhite) {
-                board.highlight(position);
+                boardController.getActiveBoardView().highlight(position);
                 highlightedPiece = piece;
-                LinkedList<Move> moves = piece.getValidMoves();
+                LinkedList<Move> moves = piece.getValidMoves(boardController.getActiveBoard());
                 positionMap = Piece.getMoveMap(moves);
                 if(Settings.showMoves) {
                     for (Move move : moves) {
-                        board.highlight(move.getEndPosition());
+                        boardController.getActiveBoardView().highlight(move.getEndPosition());
                     }
                 }
             }
@@ -54,7 +55,7 @@ public class HumanPlayer extends Player {
                     forwardBoardInput(position);
                 }
             } else {
-                board.highlight(position);
+                boardController.getActiveBoardView().highlight(position);
             }
         }
     }

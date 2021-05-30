@@ -1,7 +1,6 @@
 package src.chess.Player;
 
-import src.chess.Board.Board;
-import src.chess.Board.BoardController;
+import src.controller.BoardController;
 import src.chess.move.Move;
 import src.position.Position;
 
@@ -9,9 +8,8 @@ public abstract class Player {
     public static final String[] PLAYER_TYPES = {"Human", "Computer"};
 
     protected boolean isWhite;
-    protected Board board;
 
-    private BoardController boardController;
+    protected BoardController boardController;
 
     public Player(boolean isWhite) {
         this.isWhite = isWhite;
@@ -21,12 +19,8 @@ public abstract class Player {
         this.boardController = boardController;
     }
 
-    public void setBoard(Board board) {
-        this.board = board;
-    }
-
     public void returnMove(Move move) {
-        boardController.giveNextMove(move);
+        boardController.executeNextMove(move);
     }
 
     public abstract void calculateNextMove();

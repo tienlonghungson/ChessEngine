@@ -1,27 +1,28 @@
 package src.chess.Player;
 
-import src.chess.AI.AI;
+import src.chess.AI.MinimaxAI;
 import src.chess.AI.AISettings;
-import src.chess.Board.Board;
+import src.controller.BoardController;
 import src.position.Position;
 
 public class ComputerPlayer extends Player {
-    private AI ai;
+    private MinimaxAI ai;
 
     public ComputerPlayer(boolean isWhite) {
         super(isWhite);
-        this.ai = new AI(isWhite, AISettings.chooseAISettings());
+        this.ai = new MinimaxAI(isWhite, AISettings.chooseAISettings());
     }
 
+
     @Override
-    public void setBoard(Board board) {
-        super.setBoard(board);
-        ai.setBoard(board);
+    public void setBoardController(BoardController boardController) {
+        super.setBoardController(boardController);
+        ai.setActiveBoard(boardController.getActiveBoard());
     }
 
     public void calculateNextMove() {
         System.out.println("Starting AI Thread");
-        (new Thread(ai)).start();
+        new Thread(() -> boardController.executeNextMove(ai.makeMove())).start();
     }
 
     public void forwardBoardInput(Position position) {

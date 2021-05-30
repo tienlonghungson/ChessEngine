@@ -1,9 +1,9 @@
-name: Custom
-description: This AI is for trying out custom settings!
-timelimit: 10
+name: Bobby Fisher
+description: Bobby Fisher is a hard, experienced opponent!
+timeLimit: 30
 iterativeDeepening: true
 depth: 15
-alphaBetaPrunning: true
+alphaBetaPruning: true
 killerHeuristic: false
 transpositionTable: false
 moveOrdering: false

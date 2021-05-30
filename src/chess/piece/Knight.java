@@ -1,5 +1,6 @@
 package src.chess.piece;
 
+import src.chess.Board.ActiveBoard;
 import src.chess.Board.Board;
 import src.chess.move.Move;
 import src.position.Position;
@@ -10,32 +11,22 @@ public class Knight extends Piece {
     public static final int SCORE = 3;
     public static final String ID = "Kn";
     public static final String NAME = "Knight";
+    private static final int[][] moveDirections= {{2,1},{2,-1},{-2,1},{-2,-1},{1,2},{-1,2},{1,-2},{-1,-2}};
 
-    public Knight (Position position, boolean isWhite, Board board) {
-        super(position, isWhite, board);
+    public Knight (Position position, boolean isWhite) {
+        super(position, isWhite);
+    }
+
+    protected void getMovesHelper(int colOffset, int rowOffset, LinkedList<Move> moves, ActiveBoard activeBoard) {
+        Position temp = this.position.getPositionWithOffset(colOffset, rowOffset);
+        if(activeBoard.isInBounds(temp) && !activeBoard.hasFriendlyPieceAtPosition(temp, isWhite)) {
+            moves.add(new Move(this, activeBoard, temp));
+        }
     }
 
     @Override
-    public LinkedList<Move> getMoves() {
-        LinkedList<Move> moves = new LinkedList<>();
-
-        getMovesHelper(2, 1, moves, board);
-        getMovesHelper(2, -1, moves, board);
-        getMovesHelper(-2, 1, moves, board);
-        getMovesHelper(-2, -1, moves, board);
-        getMovesHelper(1, 2, moves, board);
-        getMovesHelper(-1, 2, moves, board);
-        getMovesHelper(1, -2, moves, board);
-        getMovesHelper(-1, -2, moves, board);
-
-        return moves;
-    }
-
-    private void getMovesHelper(int colOffset, int rowOffset, LinkedList<Move> moves, Board board) {
-        Position temp = this.position.getPositionWithOffset(colOffset, rowOffset);
-        if(board.isInBounds(temp) && !board.hasFriendlyPieceAtPosition(temp, isWhite)) {
-            moves.add(new Move(this, board, temp));
-        }
+    protected int[][] moveDirections() {
+        return moveDirections ;
     }
 
     @Override
@@ -53,10 +44,10 @@ public class Knight extends Piece {
         return NAME;
     }
 
-    public static Knight parseKnight(String[] data, Board board) {
+    public static Knight parseKnight(String[] data) {
         Position position = Position.parsePosition(data[1] + data[2]);
         boolean isWhite = Boolean.parseBoolean(data[3]);
 
-        return new Knight(position, isWhite, board);
+        return new Knight(position, isWhite);
     }
 }
