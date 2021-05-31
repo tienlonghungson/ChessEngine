@@ -8,7 +8,7 @@ import src.position.Position;
 import java.util.LinkedList;
 
 public class Rook extends Piece implements FirstMoveMatters {
-    public static final int POSITIONAL_SCORE[][]={{ 0, 0, 0, 0, 0, 0, 0, 0},
+    public static final int[][] POSITIONAL_SCORE ={{ 0, 0, 0, 0, 0, 0, 0, 0},
             {5, 10, 10, 10, 10, 10, 10, 5},
             {-5, 0, 0, 0, 0, 0, 0, -5},
             {-5, 0, 0, 0, 0, 0, 0, -5},
@@ -17,7 +17,7 @@ public class Rook extends Piece implements FirstMoveMatters {
             {-5, 0, 0, 0, 0, 0, 0, -5},
             {0, 0, 0, 5, 5, 0, 0, 0}
     };
-    public static final int SCORE = 5; //500//5
+    public static final int SCORE = 500; //500//5
     public static final String ID = "R";
     public static final String NAME = "Rook";
     private static final int[][] moveDirections =  {{1,0},{-1,0},{0,1},{0,-1}};
@@ -66,10 +66,10 @@ public class Rook extends Piece implements FirstMoveMatters {
     public int getScore() {
         return SCORE;
     }
-//    @Override
-//    public int getScore() {
-//        return SCORE+(isWhite?POSITIONAL_SCORE[7-position.getRow()][position.getCol()]:POSITIONAL_SCORE[position.getRow()][position.getCol()]);
-//    }
+    @Override
+    public int getMovingScore() {
+        return SCORE+(isWhite?POSITIONAL_SCORE[7-position.getRow()][position.getCol()]:POSITIONAL_SCORE[position.getRow()][position.getCol()]);
+    }
 
 
     @Override

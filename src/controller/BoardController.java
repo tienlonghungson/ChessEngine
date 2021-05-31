@@ -177,7 +177,7 @@ public class BoardController {
 //        System.out.println(input);
 //        Tensor<Float> output = model.session().runner().feed("serving_default_conv2d_2_input",input).fetch("StatefulPartitionedCall").run().get(0).expect(Float.class);
 //        System.out.println(output.copyTo(new float[1][1])[0][0]);
-        System.out.println("Zobrist Key : "+activeBoard.getZobristKey(isWhiteTurn));
+//        System.out.println("Zobrist Key : "+activeBoard.getZobristKey(isWhiteTurn));
         isWhiteTurn = !isWhiteTurn;
         if(isWhiteTurn) {
             white.calculateNextMove();

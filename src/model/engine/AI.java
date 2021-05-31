@@ -3,6 +3,10 @@ package src.model.engine;
 import src.model.board.ActiveBoard;
 import src.model.move.Move;
 
+enum FLAG{
+    EXACT, UPPER_BOUND, LOWER_BOUND
+}
+
 public abstract class AI {
 
     protected ActiveBoard activeBoard;
@@ -18,12 +22,12 @@ public abstract class AI {
     protected class HashEntry {
         public long zobrist;
         public int depth;
-        public int flag;
+        public FLAG flag;
         public int eval;
         public int ancient;
         public Move move;
 
-        public HashEntry(long zobrist, int depth, int flag, int eval, int ancient, Move move) {
+        public HashEntry(long zobrist, int depth, FLAG flag, int eval, int ancient, Move move) {
             this.zobrist = zobrist;
             this.depth = depth;
             this.flag = flag;

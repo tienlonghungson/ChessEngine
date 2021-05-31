@@ -100,7 +100,7 @@ public class Move implements Comparable<Move> {
      * @return the score of the moving piece
      */
     public int getMovingScore() {
-        return movingPiece.getScore();
+        return movingPiece.getMovingScore();
     }
 
     /**

@@ -15,7 +15,7 @@ import javafx.scene.image.Image;
 import java.util.LinkedList;
 
 public class Pawn extends Piece implements FirstMoveMatters {
-    public static final int POSITIONAL_SCORE[][] = {
+    public static final int[][] POSITIONAL_SCORE = {
             { 0,  0,  0,  0,  0,  0,  0,  0},
             {50, 50, 50, 50, 50, 50, 50, 50},
             {10, 10, 20, 30, 30, 20, 10, 10},
@@ -24,7 +24,7 @@ public class Pawn extends Piece implements FirstMoveMatters {
             {5, -5,-10,  0,  0,-10, -5,  5},
             {5, 10, 10,-20,-20, 10, 10,  5},
             {0,  0,  0,  0,  0,  0,  0,  0}};
-    public static final int SCORE = 1;//100//1
+    public static final int SCORE = 100;//100//1
     public static final String ID = "P";
     public static final String NAME = "Pawn";
 
@@ -141,14 +141,14 @@ public class Pawn extends Piece implements FirstMoveMatters {
             return SCORE;
         }
     }
-//    @Override
-//    public int getScore() {
-//        if(upgradePiece != null) {
-//            return upgradePiece.getScore();
-//        } else {
-//            return SCORE+(isWhite?POSITIONAL_SCORE[7-position.getRow()][position.getCol()]:POSITIONAL_SCORE[position.getRow()][position.getCol()]);
-//        }
-//    }
+    @Override
+    public int getMovingScore() {
+        if(upgradePiece != null) {
+            return upgradePiece.getMovingScore();
+        } else {
+            return SCORE+(isWhite?POSITIONAL_SCORE[7-position.getRow()][position.getCol()]:POSITIONAL_SCORE[position.getRow()][position.getCol()]);
+        }
+    }
 
     @Override
     public String getID() {

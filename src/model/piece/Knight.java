@@ -7,7 +7,7 @@ import src.position.Position;
 import java.util.LinkedList;
 
 public class Knight extends Piece {
-    public static final int POSITIONAL_SCORE[][]={
+    public static final int[][] POSITIONAL_SCORE ={
             {-50,-40,-30,-30,-30,-30,-40,-50},
             {-40,-20,  0,  0,  0,  0,-20,-40},
             {-30,  0, 10, 15, 15, 10,  0,-30},
@@ -17,7 +17,7 @@ public class Knight extends Piece {
             {-40,-20,  0,  5,  5,  0,-20,-40},
             {-50,-40,-30,-30,-30,-30,-40,-50}
     };
-    public static final int SCORE = 3; //320//3
+    public static final int SCORE = 320; //320//3
     public static final String ID = "Kn";
     public static final String NAME = "Knight";
     private static final int[][] moveDirections= {{2,1},{2,-1},{-2,1},{-2,-1},{1,2},{-1,2},{1,-2},{-1,-2}};
@@ -42,10 +42,10 @@ public class Knight extends Piece {
     public int getScore() {
         return SCORE;
     }
-//    @Override
-//    public int getScore() {
-//        return SCORE+(isWhite?POSITIONAL_SCORE[7-position.getRow()][position.getCol()]:POSITIONAL_SCORE[position.getRow()][position.getCol()]);
-//    }
+    @Override
+    public int getMovingScore() {
+        return SCORE+(isWhite?POSITIONAL_SCORE[7-position.getRow()][position.getCol()]:POSITIONAL_SCORE[position.getRow()][position.getCol()]);
+    }
 
     @Override
     public String getID() {

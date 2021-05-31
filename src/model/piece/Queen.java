@@ -7,7 +7,7 @@ import src.position.Position;
 import java.util.LinkedList;
 
 public class Queen extends Piece {
-    public static final int POSITIONAL_SCORE[][]={{ 0, 0, 0, 0, 0, 0, 0, 0},
+    public static final int[][] POSITIONAL_SCORE ={{ 0, 0, 0, 0, 0, 0, 0, 0},
             {5, 10, 10, 10, 10, 10, 10, 5},
             {-5, 0, 0, 0, 0, 0, 0, -5},
             {-5, 0, 0, 0, 0, 0, 0, -5},
@@ -16,7 +16,7 @@ public class Queen extends Piece {
             {-5, 0, 0, 0, 0, 0, 0, -5},
             {0, 0, 0, 5, 5, 0, 0, 0}
     };
-    public static final int SCORE = 9;//900/9
+    public static final int SCORE = 900;//900/9
     public static final String ID = "Q";
     public static final String NAME = "Queen";
     private static final int[][] moveDirections = {{1,0},{1,1},{0,1},{-1,1},{-1,0},{-1,-1},{0,-1},{1,-1}};
@@ -48,10 +48,10 @@ public class Queen extends Piece {
     public int getScore() {
         return SCORE;
     }
-//    @Override
-//    public int getScore() {
-//        return SCORE+(isWhite?POSITIONAL_SCORE[7-position.getRow()][position.getCol()]:POSITIONAL_SCORE[position.getRow()][position.getCol()]);
-//    }
+    @Override
+    public int getMovingScore() {
+        return SCORE+(isWhite?POSITIONAL_SCORE[7-position.getRow()][position.getCol()]:POSITIONAL_SCORE[position.getRow()][position.getCol()]);
+    }
 
     @Override
     public String getID() {

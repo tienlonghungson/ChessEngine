@@ -87,6 +87,8 @@ public abstract class Piece{
 
     public abstract int getScore();
 
+    public abstract int getMovingScore();
+
     public abstract String getID();
 
     public abstract byte getIndex();
