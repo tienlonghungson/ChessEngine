@@ -4,6 +4,7 @@ A simple chess engine and UI using JavaFX and the Minimax Algorithm with Alpha-B
 This is just the demo engine.
 
 TO-DO :
+- NullMove, Transposition Table, Killer Heuristic, Quiescence search is in development
 - Add ML, DL, Heuristic model
 - Speed-up Engine
 - Allow removed for human player
